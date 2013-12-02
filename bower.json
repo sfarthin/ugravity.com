@@ -1,0 +1,19 @@
+{
+  "name": "uGravity.com",
+  "version": "0.0.1",
+  "homepage": "http://uGravity.com",
+  "authors": [
+    "Steve Farthing <me@stevefar.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.0.2"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "uGravity.com",
+  "version": "0.0.1",
+  "dependencies": {
+    "jsdom": "~0.8.8",
+    "location-bar": "~1.0.0",
+    "brfs": "0.0.8",
+    "jquery": "~1.8.3",
+    "step": "0.0.5",
+    "underscore": "~1.5.2",
+    "express": "~3.4.4",
+    "micro-template": "~0.1.2",
+    "debounce": "0.0.3"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-less": "~0.8.2",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-contrib-watch": "~0.5.3",
+    "bower": "~1.2.7",
+    "grunt-contrib-copy": "~0.4.1"
+  }
+}
