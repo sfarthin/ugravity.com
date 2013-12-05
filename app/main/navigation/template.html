@@ -1,16 +1,19 @@
 <!-- <div class="navbar navbar-inverse navbar-fixed-top" role="navigation"> -->
 	<div class="container-fluid">
 		<ul class="nav navbar-nav navbar-right">
+			<li class="normalize"><a><span class="glyphicon glyphicon-resize-full"></span> Fit to View</a></li>
+			<li class="start"><a><span class="glyphicon glyphicon-play"></span> Start</a></li>
+			<li class="stop" style="display:none"><a><span class="glyphicon glyphicon-pause"></span> Pause</a></li>
+			<li class="reset"><a><span class="glyphicon glyphicon-refresh"></span> Reset</a></li>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Objects <b class="caret"></b></a>
-				<ul class="dropdown-menu">
-					<li><a href="#">Kepler16-A</a></li>
-					<li><a href="#">Kepler16-B</a></li>
-					<li><a href="#">Kepler16-b</a></li>
+				<!-- <ul class="dropdown-menu objects"> -->
+					<!-- <li><a><span></span>Kepler16-A</a></li>
+					<li><a><span></span>Kepler16-B</a></li>
+					<li><a><span></span>Kepler16-b</a></li>
 					<li class="divider"></li>
-					<!-- <li class="dropdown-header">Nav header</li> -->
-					<li><a href="#">Add Another Object</a></li>
-				</ul>
+					<li><a href="#">Add Another Object</a></li> -->
+				<!-- </ul> -->
 			</li>
 		</ul>
 		
@@ -21,12 +24,12 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="/">uGravity</a>
+			<a class="navbar-brand active">uGravity</a>
 		</div>
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="/new"><span class="glyphicon glyphicon-flash"></span> New Project</a></li>
-				<li><a href="/save"><span class="glyphicon glyphicon-floppy-save"></span> Save Project</a></li>
+				<li class="new"><a><span class="glyphicon glyphicon-flash"></span> New Project</a></li>
+				<li class="save"><a><span class="glyphicon glyphicon-floppy-save"></span> Save Project</a></li>
 			</ul>
 		</div>
 	</div>

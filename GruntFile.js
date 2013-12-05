@@ -32,13 +32,13 @@ module.exports = function(grunt) {
 		watch: {
 			app_css: {
 				files: ["less/*.less"],
-				tasks: ['less:main_css'],
+				tasks: ['less:app_css'],
 				options: {
 					event: ['changed']
 				},
 			},
 			build: {
-				files: ["app/**/*"],
+				files: ["app/**/*", "/Users/sfarthing/Sites/gravity/uGravity.js"],
 				tasks: ['build'],
 				options: {
 					event: ['changed']

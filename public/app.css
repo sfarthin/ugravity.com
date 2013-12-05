@@ -6000,8 +6000,41 @@ canvas {
   right: 0px;
   bottom: 0px;
 }
-#main-nav li.dropdown:hover > .dropdown-menu {
+#main-nav {
+  /*	li.dropdown:hover {
+		// Show the menu
+		> .dropdown-menu {
+			display: block;
+		}
+	}*/
+}
+#main-nav li.stop,
+#main-nav li.start {
+  width: 90px;
+}
+.dropdown-menu.objects li {
+  position: relative;
+}
+.dropdown-menu.objects a {
+  padding-left: 30px;
+}
+.dropdown-menu.objects a span {
+  position: absolute;
+  left: 10px;
+  top: 5px;
   display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  background-color: red;
+}
+.navbar-brand {
+  color: white !important;
+}
+#editModal .form-group label.col-sm-5 .glyphicon {
+  position: absolute;
+  top: 11px;
+  right: -6px;
 }
 body a {
   cursor: pointer;

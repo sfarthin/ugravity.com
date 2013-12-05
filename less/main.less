@@ -64,12 +64,51 @@ canvas {
 
 #main-nav {
 	
-	li.dropdown:hover {
+/*	li.dropdown:hover {
 		// Show the menu
 		> .dropdown-menu {
 			display: block;
 		}
+	}*/
+	li.stop, li.start {
+		width: 90px;
 	}
+}
+
+.dropdown-menu.objects {
+	
+	li {
+		position: relative;
+	}
+
+	a {
+		
+		padding-left: 30px;
+		
+		span {
+			position: absolute;
+			left: 10px;
+			top: 5px;
+			display: block;
+			width: 15px;
+			height: 15px;
+			border-radius: 15px;
+			background-color: red;
+		}
+	}
+}
+
+.navbar-brand {
+	color: white !important;
+}
+
+#editModal {
+	.form-group label.col-sm-5 .glyphicon {
+		position: absolute;
+		top: 11px;
+		right: -6px;
+	}
+
 }
 
 body a {
