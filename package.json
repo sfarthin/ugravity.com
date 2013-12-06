@@ -1,6 +1,10 @@
 {
   "name": "uGravity.com",
+  "description": "Map out planetary bodies and create custom simulations with this interactive web app.",
   "version": "0.0.1",
+  "homepage": "https://uGravity.com",
+  "author": "Steve Farthing <me@stevefar.com> (https://stevefar.com)",
+  "license": "GPL",
   "dependencies": {
     "jsdom": "~0.8.8",
     "location-bar": "~1.0.0",

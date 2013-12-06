@@ -363,7 +363,8 @@ var Navigation	= require("./navigation/index"),
 	Canvas 		= require("./canvas/index.js"),
 	ObjectList 	= require("./object-list/index.js"),
 	SaveDialog  = require("./saveDialog/index"),
-	EditDialog 	= require("./editObject/index");
+	EditDialog 	= require("./editObject/index"),
+	package_json= JSON.parse("{\n  \"name\": \"uGravity.com\",\n  \"description\": \"Map out planetary bodies and create custom simulations with this interactive web app.\",\n  \"version\": \"0.0.1\",\n  \"dependencies\": {\n    \"jsdom\": \"~0.8.8\",\n    \"location-bar\": \"~1.0.0\",\n    \"brfs\": \"0.0.8\",\n    \"jquery\": \"~1.8.3\",\n    \"step\": \"0.0.5\",\n    \"underscore\": \"~1.5.2\",\n    \"express\": \"~3.4.4\",\n    \"micro-template\": \"~0.1.2\",\n    \"debounce\": \"0.0.3\",\n    \"ugravity\": \"0.0.1\",\n    \"browserify\": \"~2.36.1\"\n  },\n  \"devDependencies\": {\n    \"grunt\": \"~0.4.2\",\n    \"grunt-contrib-less\": \"~0.8.2\",\n    \"grunt-contrib-uglify\": \"~0.2.7\",\n    \"grunt-contrib-watch\": \"~0.5.3\",\n    \"bower\": \"~1.2.7\",\n    \"grunt-contrib-copy\": \"~0.4.1\"\n  }\n}\n".toString());
 
 module.exports = function(window, document, router, onLoad) {
 	
@@ -406,6 +407,15 @@ module.exports = function(window, document, router, onLoad) {
 		}
 	}
 	
+	// Lets set the title and keywords
+	var title = document.createElement("title");
+	title.innerHTML = "uGravity | Universal Gravity Simulator";
+	document.head.appendChild(title);
+	
+	var meta_description = document.createElement("meta");
+	meta_description.setAttribute("name", "description");
+	meta_description.setAttribute("content", package_json.description);
+	document.head.appendChild(meta_description);
 	
 	if(!settings)
 		settings = empty;

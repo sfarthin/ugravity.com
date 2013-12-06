@@ -7,7 +7,8 @@ var Navigation	= require("./navigation/index"),
 	Canvas 		= require("./canvas/index.js"),
 	ObjectList 	= require("./object-list/index.js"),
 	SaveDialog  = require("./saveDialog/index"),
-	EditDialog 	= require("./editObject/index");
+	EditDialog 	= require("./editObject/index"),
+	package_json= JSON.parse(require("fs").readFileSync(__dirname + "/../../package.json").toString());
 
 module.exports = function(window, document, router, onLoad) {
 	
@@ -50,6 +51,15 @@ module.exports = function(window, document, router, onLoad) {
 		}
 	}
 	
+	// Lets set the title and keywords
+	var title = document.createElement("title");
+	title.innerHTML = "uGravity | Universal Gravity Simulator";
+	document.head.appendChild(title);
+	
+	var meta_description = document.createElement("meta");
+	meta_description.setAttribute("name", "description");
+	meta_description.setAttribute("content", package_json.description);
+	document.head.appendChild(meta_description);
 	
 	if(!settings)
 		settings = empty;
