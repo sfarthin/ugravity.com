@@ -86,6 +86,12 @@ module.exports = function(grunt) {
 				// Grab HTML and write file.
 				window.document.head.innerHTML += "<link rel=\"stylesheet\" href=\"/app.css\">";
 				window.document.body.innerHTML += "<script src='/app.js'></script>";
+				
+				// Analytics
+				if(fs.existsSync(__dirname + "/analytics.html")) {
+					window.document.body.innerHTML += fs.readFileSync(__dirname + "/analytics.html");
+				}
+				
 				var html = window.document.innerHTML;
 				window.close();
 
