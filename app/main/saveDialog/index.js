@@ -22,7 +22,7 @@ module.exports = function(window,document, router) {
 			div.querySelector(".modal-content").addEventListener("click", this._modalContentListener, false);
 
 			
-			this._closeListener = function() { console.log(1); this.close(); }.bind(this);			
+			this._closeListener = function() { this.close(); }.bind(this);			
 			div.addEventListener("click", this._closeListener, false);
 			
 			document.body.appendChild(backdrop);

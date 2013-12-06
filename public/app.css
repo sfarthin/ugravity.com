@@ -6028,8 +6028,12 @@ canvas {
   border-radius: 15px;
   background-color: red;
 }
+li.dropdown > a:first-child {
+  cursor: default;
+}
 .navbar-brand {
   color: white !important;
+  cursor: default;
 }
 #editModal .form-group label.col-sm-5 .glyphicon {
   position: absolute;

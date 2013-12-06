@@ -1,22 +1,12 @@
 var html = require('fs').readFileSync(__dirname + '/template.html', 'utf-8').toString();
 
-var toArray = function(arr) {
-	var list = [];
-	for(var i in arr) {
-		list.push(arr[i]);
-	}
-	
-	return list;
-	
-}
-
 module.exports = function(window, document, router) {
 	
 	var div 		= document.createElement("div");
 	var backdrop 	= document.createElement("div");
 	
 	var get_value = function(name) { return div.querySelector("[name="+name+"]").value; },
-		set 	  = function(name, value) { return div.querySelector("[name="+name+"]").value = value; };
+		set 	  = function(name, value) { try { return div.querySelector("[name="+name+"]").value = value; } catch(e) { console.log("cannot set " + name); }  };
 	
 	
 	var api = {
@@ -36,7 +26,7 @@ module.exports = function(window, document, router) {
 					var func 	= this.listeners[msg][i].func,
 						context	= this.listeners[msg][i].context;
 					
-					func.apply((context ? context : this), toArray(arguments).slice(1));
+					func.apply((context ? context : this), [].slice.call(arguments, 1));
 				}
 			}
 			
@@ -44,22 +34,31 @@ module.exports = function(window, document, router) {
 		
 		open: function(settings, editObject) {
 			
-			console.log(settings);
-			
 			div.innerHTML = html.replace(/{link}/g, window.location.protocol+"//"+window.location.host+"/project/"+encodeURI(JSON.stringify(settings)));
 			
-			// Build dropdown for the object list
+			// Build dropdown for the relative object list
 			var objects_html = [], j = 0;
 			settings.objects.sort(function(a,b) {
 				if(a.mass < b.mass) return 1; else return -1;
 			}).forEach(function(object) {
 				objects_html[j++] = "<option value='"+escape(object.id)+"'>"+object.name+"</option>";
-			});			
-			div.innerHTML = html.replace(/{objects}/g, objects_html.join(""));
+			});
 			
 			// If there are no objects or if the object has a position already without a relative object
-			if((!editObject && !settings.objects.length) || (editObject && editObject.x && !get_value("relative_object"))) {
+			if((!editObject && !settings.objects.length) || (editObject && !editObject.relative_object)) {
 				div.querySelector(".position_group").style.display = "none";
+			} else {
+				div.innerHTML = html.replace(/{objects}/g, objects_html.join(""));
+			}
+			
+			// If we are editing an object that already exists, lets set the form fields.
+			if(editObject) {
+				var fields = ["name", "color", "mass", "radius_in_km", "relative_object", "relative_object_distance", "relative_object_direction", "velocity", "velocity_direction"];
+				
+				fields.forEach(function(field) {
+					set(field, editObject[field]);
+				});
+				
 			}
 			
 			
@@ -70,8 +69,6 @@ module.exports = function(window, document, router) {
 				// The buttons at the bottom
 				if(e.toElement.getAttribute("data-dismiss") == "modal") {
 					
-					console.log("Data-dismiss");
-					
 					if(e.toElement.className.match("save")) {
 
 						var x, y,
@@ -81,7 +78,8 @@ module.exports = function(window, document, router) {
 							relative_object   = settings.objects.filter(function(object) {
 													return object.id == relative_object_id;
 												})[0];
-												
+						
+						// Lets determine if position.						
 						if(relative_object && (distance || distance == 0) && (direction_radians || direction_radians == 0)) {
 							x = relative_object.x + (Math.sin(direction_radians)*distance);
 							y = relative_object.y - (Math.cos(direction_radians)*distance);
@@ -90,30 +88,29 @@ module.exports = function(window, document, router) {
 							x = (editObject && editObject.x ? editObject.x : 0);
 							y = (editObject && editObject.y ? editObject.y : 0);
 						}
-						
-						console.log(relative_object,distance,direction_radians,x,y);
 							
 						var velocity_direction_radians = Number(get_value("velocity_direction")) * Math.PI / 180,
 							velocity 				   = Number(get_value("velocity"));
 							
 						var updatedObject = {
 							// Essiential
-							id: 		new Date().getTime()+Math.round((Math.random()*100)),
+							id: 		(editObject && editObject.id ? editObject.id : new Date().getTime()+"-"+Math.round((Math.random()*100))),
 							"name": 	get_value("name"),
 							"color": 	get_value("color"),
-							"mass": 	Number(get_value("mass")),
-							"radius": 	Number(get_value("radius")),
+							"mass": 	Number(get_value("mass").replace(/,/g, "")),
+							"radius": 	Number(get_value("radius_in_km").replace(/,/g, ""))/(1.496e+8), // convert kilometers to AU
 							"y": 		Number(y),
 							"x": 		Number(x),
 							"velocityX": (Math.sin(velocity_direction_radians)*velocity),
 							"velocityY": (Math.cos(velocity_direction_radians)*velocity),
 							
-							// Additional for uGravity.com
+							// Additional for uGravity.com.. we can keep these as text so we can use equations.
+							"radius_in_km":    get_value("radius_in_km"),
 							"relative_object": get_value("relative_object"),
-							"relative_object_distance": Number(get_value("relative_object_distance")),
-							"relative_object_direction":Number(get_value("relative_object_direction")),
-							"velocity": Number(get_value("velocity")),
-							"velocity_direction": Number(get_value("velocity_direction")),
+							"relative_object_distance": get_value("relative_object_distance"),
+							"relative_object_direction":get_value("relative_object_direction"),
+							"velocity": get_value("velocity"),
+							"velocity_direction": get_value("velocity_direction"),
 						};
 						
 						this.trigger("save", updatedObject);
@@ -130,7 +127,7 @@ module.exports = function(window, document, router) {
 					if(preset == "earth") {
 						set("name", "Earth");
 						set("mass", 5.9721986e+24);
-						set("radius", 4.2564e-5);
+						set("radius_in_km", 6371);
 						set("relative_object_distance", 1);
 						set("velocity_direction", 90);
 						
@@ -139,6 +136,9 @@ module.exports = function(window, document, router) {
 						set("velocity", 67000/ 92955807.3 / 60 / 60);
 						
 					}
+					
+					this._velocityDirectionListener();
+					this._directionListener();
 					
 				}
 				
@@ -158,6 +158,7 @@ module.exports = function(window, document, router) {
 			};
 			div.querySelector("[name=velocity_direction]").addEventListener("keyup", this._velocityDirectionListener, false);
 			div.querySelector("[name=velocity_direction]").addEventListener("change", this._velocityDirectionListener, false);
+			this._velocityDirectionListener(); // Lets make sure its set initially.
 			
 			this._directionListener = function() {
 				var degrees = parseInt(get_value("relative_object_direction")) % 360;
@@ -171,6 +172,7 @@ module.exports = function(window, document, router) {
 			};
 			div.querySelector("[name=relative_object_direction]").addEventListener("keyup", this._directionListener, false);
 			div.querySelector("[name=relative_object_direction]").addEventListener("change", this._directionListener, false);
+			this._directionListener(); // Lets make sure its set initially.
 			
 			document.body.appendChild(backdrop);
 			document.body.appendChild(div);

@@ -5,9 +5,7 @@ var html = require('fs').readFileSync(__dirname + '/template.html', 'utf-8').toS
 module.exports = function(window, document) {
 	
 	return {
-		
-		listeners: {},
-		
+
 		navButtons: [
 			"normalize",
 			"start",
@@ -17,20 +15,25 @@ module.exports = function(window, document) {
 			"new"
 		],
 		
-		on: function(msg, func) {
+		listeners: {},
+		on: function(msg, func, context) {
 			
 			if(!this.listeners[msg])
 				this.listeners[msg] = [];
 				
-			this.listeners[msg].push(func);
+			this.listeners[msg].push({func: func, context: context});
 			
 		},
-		
 		trigger: function(msg) {
+			
+			console.log(msg, this.listeners);
 			
 			if(this.listeners[msg]) {
 				for(var i in this.listeners[msg]) {
-					this.listeners[msg][i]();
+					var func 	= this.listeners[msg][i].func,
+						context	= this.listeners[msg][i].context;
+					
+					func.apply((context ? context : this), [].slice.call(arguments, 1));
 				}
 			}
 			
@@ -57,8 +60,8 @@ module.exports = function(window, document) {
 					document.body.appendChild(div);
 			}
 			
-			div.querySelector("li.dropdown").addEventListener('mouseover', this.dropdownMouseover, false);
-			div.querySelector("li.dropdown").addEventListener('mouseout', this.dropdownMouseout, false);
+			[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) { d.addEventListener('mouseover', this.dropdownMouseover, false); }.bind(this));
+			[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) { d.addEventListener('mouseout', this.dropdownMouseout, false); }.bind(this));
 			
 			
 			this._clickListeners = {};
@@ -84,10 +87,31 @@ module.exports = function(window, document) {
 			
 			this.navButtons.forEach(triggerOnClick);
 			
-			this.objectDropdown = new ObjectDropdown(document, div.querySelector(".navbar-right .dropdown:last-child"));
+			this.objectDropdown = new ObjectDropdown(document, div.querySelector(".dropdown.objects"));
 			
+			// @todo we need soem sort of proxy msg
 			this.objectDropdown.on("newobject", function() {
-				this.trigger("newobject");
+				
+				// close all dropdowns
+				[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(t) {
+					t.className = t.className.replace(/ open/g,"");;
+				});
+				
+				var arr = [].splice.call(arguments,0);
+				arr.unshift("newobject");
+				this.trigger.apply(this, arr);
+			}.bind(this));
+			
+			this.objectDropdown.on("editobject", function() {
+				
+				// close all dropdowns
+				[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(t) {
+					t.className = t.className.replace(/ open/g,"");;
+				});
+				
+				var arr = [].splice.call(arguments,0);
+				arr.unshift("editobject");
+				this.trigger.apply(this, arr);
 			}.bind(this));
 			
 		},
@@ -97,19 +121,16 @@ module.exports = function(window, document) {
 		},
 		
 		dropdownMouseout: function(e) {
-			e.currentTarget.className = e.currentTarget.className.replace(" open","");
+			e.currentTarget.className = e.currentTarget.className.replace(/ open/g,"");
 		},
 		
 		updateObjects: function(objects) {
-			
 			this.objectDropdown.update(objects);
-				
-			
 		},
 		
 		remove: function() {
-			div.querySelector("li.dropdown").removeEventListener('mouseover', this.dropdownMouseover, false);
-			div.querySelector("li.dropdown").removeEventListener('mouseout', this.dropdownMouseout, false);
+			[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) {d.removeEventListener('mouseover', this.dropdownMouseover, false); }.bind(this));
+			[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) {d.removeEventListener('mouseout', this.dropdownMouseout, false); }.bind(this));
 			div.querySelector(".nav li").removeEventListener('click', this._clickListener, false);
 			
 			document.body.removeChild(div);

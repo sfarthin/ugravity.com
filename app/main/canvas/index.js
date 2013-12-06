@@ -1,5 +1,5 @@
 var debounce 	= require("debounce"),
-	uGravity 	= require("/Users/sfarthing/Sites/gravity/uGravity.js"),
+	uGravity 	= require("ugravity"),
 	element;
 
 module.exports = function(window, document, router, navigation, settings) {
@@ -7,31 +7,16 @@ module.exports = function(window, document, router, navigation, settings) {
 	return {
 		add: function() {
 			
-			if(!element) {
-
-				element_in_dom = document.getElementById("main-canvas");
-
-				if(element_in_dom) {
-					element = element_in_dom;
-				} else {
-					element = document.createElement("canvas");
-				}
-
-				element.id = "main-canvas";
-				
-				
-				if(!element_in_dom)
-					document.body.appendChild(element);
-			}
-			
 			// Add window listener
 			this._windowListener = debounce(this.fitCanvasToScreen.bind(this), 100);
 			window.addEventListener('resize', this._windowListener, false);
 			
 			this.fitCanvasToScreen();
 			
-			if(element.getContext && element.getContext('2d'))
-				this.uGravity = new uGravity(element, settings);
+			// if(element.getContext && element.getContext('2d')) {
+			// 	this.uGravity = new uGravity(element, settings);
+			// 	this.uGravity.normalize();
+			// }
 			
 			
 			navigation.updateObjects.bind(navigation)(settings.objects);
@@ -50,7 +35,7 @@ module.exports = function(window, document, router, navigation, settings) {
 			}.bind(this));
 			
 			navigation.on("normalize", function() {
-				this.uGravity.normalize();
+				this.normalize();
 			}.bind(this));
 			
 			// 
@@ -64,9 +49,23 @@ module.exports = function(window, document, router, navigation, settings) {
 			
 		},
 		
+		normalize: function() {
+			this.uGravity.normalize();
+		},
+		
 		fitCanvasToScreen: function() {
 			var height = window.innerHeight,
 				width  = window.innerWidth;
+		
+		
+			if(element) {
+				element.parentNode.removeChild(element);
+				element = null;
+			}
+		
+			element = document.createElement("canvas");
+			element.id = "main-canvas";
+			document.body.appendChild(element);
 		
 			// This makes our canvas retina ready
 			element.width 	= width*2;
@@ -79,7 +78,14 @@ module.exports = function(window, document, router, navigation, settings) {
 			element.style.left		= "0px";
 			
 			// @todo, lets reinstaniate the whole uGravity thing here instead of just rendering.
-			if(this.uGravity) this.uGravity.render();
+			// if(this.uGravity) {
+			// 	this.uGravity.render();
+			// }
+			// 
+			if(element.getContext && element.getContext('2d')) {
+				this.uGravity = new uGravity(element, settings);
+				this.uGravity.normalize();
+			}
 			
 		},
 		
@@ -87,7 +93,8 @@ module.exports = function(window, document, router, navigation, settings) {
 			return this.uGravity.export();
 		},
 		
-		update: function(settings) {
+		update: function(new_settings) {
+			settings = new_settings;
 			this.uGravity.load(settings);
 		},
 		
