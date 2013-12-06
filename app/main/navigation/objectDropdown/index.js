@@ -50,10 +50,17 @@ module.exports = function(document, element) {
 	
 			dropdown_ul.innerHTML = html.join("");
 			
-			this._addListener = function() { this.trigger("newobject") }.bind(this);
+			this._addListener = function() { 
+				try { _paq.push(['trackPageView', 'object/new']); } catch(e) {}
+				this.trigger("newobject") 
+			}.bind(this);
+			
 			dropdown_ul.querySelector("li.add").addEventListener("click", this._addListener, false);
 			
-			this._editListener = function(e) { this.trigger("editobject", e.currentTarget.getAttribute("data-objectid")); }.bind(this);
+			this._editListener = function(e) { 
+				try { _paq.push(['trackPageView', 'object/edit']); } catch(e) {}
+				this.trigger("editobject", e.currentTarget.getAttribute("data-objectid")); 
+			}.bind(this);
 			[].splice.call(dropdown_ul.querySelectorAll("li.object"),0).forEach(function(d) { d.addEventListener("click", this._editListener, false); }.bind(this));
 			
 		}

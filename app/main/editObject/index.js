@@ -70,6 +70,8 @@ module.exports = function(window, document, router) {
 				if(e.toElement.getAttribute("data-dismiss") == "modal") {
 					
 					if(e.toElement.className.match("save")) {
+						
+						try { _paq.push(['trackPageView', 'object/save']); } catch(e) {}
 
 						var x, y,
 							relative_object_id = get_value("relative_object"),
@@ -115,6 +117,9 @@ module.exports = function(window, document, router) {
 						
 						this.trigger("save", updatedObject);
 					} else if(e.toElement.className.match("remove")) {
+						
+						try { _paq.push(['trackPageView', 'object/remove']); } catch(e) {}
+						
 						this.trigger("remove", editObject);
 					}
 					this.close();
@@ -125,6 +130,9 @@ module.exports = function(window, document, router) {
 					var preset = e.toElement.getAttribute("data-preset");
 					
 					if(preset == "earth") {
+						
+						try { _paq.push(['trackPageView', 'preset/earth']); } catch(e) {}
+						
 						set("name", "Earth");
 						set("mass", 5.9721986e+24);
 						set("radius_in_km", 6371);

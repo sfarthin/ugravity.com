@@ -77,6 +77,12 @@ module.exports = function(window, document) {
 						div.querySelector(".nav li.stop").style.display = "block";
 					}
 					
+					if(i == "new" || i == "save") {
+						try { _paq.push(['trackPageView', 'project/'+i]); } catch(e) {}							
+					} else {
+						try { _paq.push(['trackPageView', 'nav/'+i]); } catch(e) {}	
+					}
+					
 					this.trigger(i);
 					e.stopPropagation();
 				}.bind(this);

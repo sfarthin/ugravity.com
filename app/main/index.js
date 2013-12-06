@@ -70,6 +70,13 @@ module.exports = function(window, document, router, onLoad) {
 		objectList = new ObjectList(window, document),
 		saveDialog = new SaveDialog(window, document, router);
 	
+
+	// @todo make sure settings are saved when exited. 
+	// window.onbeforeunload = function() {
+	// 	localStorage["ugravity-last-project"] = JSON.stringify(canvas.export());
+	//     return false;
+	// }
+	
 	navigation.add();
 	canvas.add();
 	
