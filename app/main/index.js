@@ -26,9 +26,11 @@ module.exports = function(window, document, router, onLoad) {
 	*
 	**/
 	// This variable contains the settings for the simulation without any simulation applied, so we can reset our simulation with these settings.
-	this._settings = {objects: []};
+	this._settings = {objects: [], elapsedTime: 0};
 	this.changeSettings = function(new_settings) {
 		this._settings = new_settings;
+		
+		this._settings.elapsedTime = 0;
 		
 		// Lets update our navigation dropdown
 		navigation.objectDropdown.update(this._settings.objects);
@@ -54,7 +56,7 @@ module.exports = function(window, document, router, onLoad) {
 
 		// If our canvas exists, lets kill it.
 		if(this.canvas) {
-			this.canvas.parentNode.removeChild(element);
+			this.canvas.parentNode.removeChild(this.canvas);
 			this.canvas = null;
 		}
 		
@@ -98,7 +100,7 @@ module.exports = function(window, document, router, onLoad) {
 	}
 	
 	this.saveProject 	= function() { saveDialog.open(this._settings); }
-	this.newProject 	= function() { this.changeSettings({objects: []}); }
+	this.newProject 	= function() { this.changeSettings({objects: [], elapsedTime: 0}); }
 
 	this.newObject = function() {
 		editDialog.open(this._settings, null, function(object) {
@@ -177,7 +179,6 @@ module.exports = function(window, document, router, onLoad) {
 		
 		// Lets make sure we show the correct time Scale at the top of the screen.
 		if(this.uGravity) {
-			console.log(this._settings);
 			navigation.updateTimeScale(this.uGravity.export().timeScale);
 		}
 		

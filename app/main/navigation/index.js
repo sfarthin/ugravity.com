@@ -6,8 +6,6 @@ var html = require('fs').readFileSync(__dirname + '/template.html', 'utf-8').toS
 module.exports = function(window, document) {
 	
 	extend(this, require("../eventEmitter.js"));
-	
-	console.log(this);
 
 	this.navButtons = ["normalize", "time", "start", "stop", "reset", "save", "new"];
 	

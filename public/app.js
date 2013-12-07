@@ -252,7 +252,7 @@ var Navigation	= require("./navigation/index"),
 	TimeDialog 	= require("./timeDialog/index");
 
 // Package information
-var package_json = JSON.parse("{\n  \"name\": \"uGravity.com\",\n  \"description\": \"Map out planetary bodies and create custom simulations with this interactive web app.\",\n  \"version\": \"0.0.1\",\n  \"homepage\": \"https://uGravity.com\",\n  \"author\": \"Steve Farthing <me@stevefar.com> (https://stevefar.com)\",\n  \"license\": \"GPL\",\n  \"dependencies\": {\n    \"jsdom\": \"~0.8.8\",\n    \"location-bar\": \"~1.0.0\",\n    \"brfs\": \"0.0.8\",\n    \"jquery\": \"~1.8.3\",\n    \"step\": \"0.0.5\",\n    \"underscore\": \"~1.5.2\",\n    \"express\": \"~3.4.4\",\n    \"micro-template\": \"~0.1.2\",\n    \"debounce\": \"0.0.3\",\n    \"ugravity\": \"0.0.1\",\n    \"browserify\": \"~2.36.1\"\n  },\n  \"devDependencies\": {\n    \"grunt\": \"~0.4.2\",\n    \"grunt-contrib-less\": \"~0.8.2\",\n    \"grunt-contrib-uglify\": \"~0.2.7\",\n    \"grunt-contrib-watch\": \"~0.5.3\",\n    \"bower\": \"~1.2.7\",\n    \"grunt-contrib-copy\": \"~0.4.1\"\n  }\n}\n".toString());
+var package_json = JSON.parse("{\n  \"name\": \"uGravity.com\",\n  \"description\": \"Map out planetary bodies and create custom simulations with this interactive web app.\",\n  \"version\": \"0.0.1\",\n  \"homepage\": \"https://uGravity.com\",\n  \"author\": \"Steve Farthing <me@stevefar.com> (https://stevefar.com)\",\n  \"license\": \"GPL\",\n  \"dependencies\": {\n    \"jsdom\": \"~0.8.8\",\n    \"location-bar\": \"~1.0.0\",\n    \"brfs\": \"0.0.8\",\n    \"jquery\": \"~1.8.3\",\n    \"step\": \"0.0.5\",\n    \"underscore\": \"~1.5.2\",\n    \"express\": \"~3.4.4\",\n    \"micro-template\": \"~0.1.2\",\n    \"debounce\": \"0.0.3\",\n    \"ugravity\": \"0.0.4\",\n    \"browserify\": \"~2.36.1\"\n  },\n  \"devDependencies\": {\n    \"grunt\": \"~0.4.2\",\n    \"grunt-contrib-less\": \"~0.8.2\",\n    \"grunt-contrib-uglify\": \"~0.2.7\",\n    \"grunt-contrib-watch\": \"~0.5.3\",\n    \"bower\": \"~1.2.7\",\n    \"grunt-contrib-copy\": \"~0.4.1\"\n  }\n}\n".toString());
 
 module.exports = function(window, document, router, onLoad) {
 	
@@ -269,9 +269,11 @@ module.exports = function(window, document, router, onLoad) {
 	*
 	**/
 	// This variable contains the settings for the simulation without any simulation applied, so we can reset our simulation with these settings.
-	this._settings = {objects: []};
+	this._settings = {objects: [], elapsedTime: 0};
 	this.changeSettings = function(new_settings) {
 		this._settings = new_settings;
+		
+		this._settings.elapsedTime = 0;
 		
 		// Lets update our navigation dropdown
 		navigation.objectDropdown.update(this._settings.objects);
@@ -297,7 +299,7 @@ module.exports = function(window, document, router, onLoad) {
 
 		// If our canvas exists, lets kill it.
 		if(this.canvas) {
-			this.canvas.parentNode.removeChild(element);
+			this.canvas.parentNode.removeChild(this.canvas);
 			this.canvas = null;
 		}
 		
@@ -341,7 +343,7 @@ module.exports = function(window, document, router, onLoad) {
 	}
 	
 	this.saveProject 	= function() { saveDialog.open(this._settings); }
-	this.newProject 	= function() { this.changeSettings({objects: []}); }
+	this.newProject 	= function() { this.changeSettings({objects: [], elapsedTime: 0}); }
 
 	this.newObject = function() {
 		editDialog.open(this._settings, null, function(object) {
@@ -420,7 +422,6 @@ module.exports = function(window, document, router, onLoad) {
 		
 		// Lets make sure we show the correct time Scale at the top of the screen.
 		if(this.uGravity) {
-			console.log(this._settings);
 			navigation.updateTimeScale(this.uGravity.export().timeScale);
 		}
 		
@@ -454,8 +455,6 @@ var html = "<!-- <div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"na
 module.exports = function(window, document) {
 	
 	extend(this, require("../eventEmitter.js"));
-	
-	console.log(this);
 
 	this.navButtons = ["normalize", "time", "start", "stop", "reset", "save", "new"];
 	
@@ -717,8 +716,6 @@ module.exports = function(window,document, router) {
 	div.innerHTML = html;
 	
 	this.open = function(timeScale, callback) {
-		
-		console.log(arguments);
 
 		div.querySelector("input").value = timeScale;
 
@@ -1426,6 +1423,7 @@ define(function() {
 				case "render": 
 					// Lets take in all the new State the Physics Worker gave us, and render the page.
 					this.objects = data.objects;
+					this.elapsedTime = data.elapsedTime;
 					this.render(); 
 					return;
 				
@@ -1483,6 +1481,8 @@ define(function() {
 			
 			// Draw Scale box in left bottom corner.
 			this.drawScaleBox();
+			
+			this.drawTimeBox();
 			
 			// Lets draw labels for objects that are too small
 			this.drawLabels();
@@ -1663,6 +1663,66 @@ define(function() {
 			
 		};
 		
+		this.drawTimeBox = function() {
+			function addCommas(nStr) {
+				nStr += '';
+				x = nStr.split('.');
+				x1 = x[0];
+				x2 = x.length > 1 ? '.' + x[1] : '';
+				var rgx = /(\d+)(\d{3})/;
+				while (rgx.test(x1)) {
+					x1 = x1.replace(rgx, '$1' + ',' + '$2');
+				}
+				return x1 + x2;
+			}
+			
+			var text;
+
+			text = Math.round(this.elapsedTime) + " seconds";
+			
+			if(this.elapsedTime > 60 * 5) {
+				text = addCommas(Math.round(this.elapsedTime/60)) + " minutes";
+			}
+			if(this.elapsedTime > 60 * 60 * 5) {
+				text = addCommas(Math.round(this.elapsedTime/60/60)) + " hours";
+			}
+			if(this.elapsedTime > 60 * 60 * 24 * 5) {
+				text = addCommas(Math.round(this.elapsedTime/60/60/24)) + " days";
+			}
+			if(this.elapsedTime > 60 * 60 * 24 * 365 * 10) {
+				text = addCommas(Math.round(this.elapsedTime/60/60/24/365)) + " years";
+			}
+
+			// 	units = "AU";
+			// } else {
+			// 	cellWidthText = Math.round(this.cellWidth / this.scale * 1.496e+8);
+			// 	units = "km";
+			// }
+				
+				
+
+			ctx.font = '24px HelveticaNeue-Light';
+			
+			var textWidth 	 = ctx.measureText(text).width,
+				height 		= 40,
+				padding 	= 20,
+				textPadding	= 8,
+				width = textPadding + padding + textWidth;
+			
+			ctx.fillStyle = "#FFF";
+			ctx.strokeStyle = "black";
+			ctx.shadowBlur = 15;
+			ctx.fillRect(canvas.width - padding - width,canvas.height - height - padding,width,height); // 
+			ctx.shadowBlur = 0;
+			
+			ctx.lineWidth = 2;
+			ctx.strokeRect(canvas.width - padding - width, canvas.height - height - padding, width, height); // canvas.height - 
+			
+			ctx.fillStyle = "#000000";
+			ctx.fillText(text, canvas.width - (padding + textPadding - 20) - width, canvas.height - padding - textPadding); 
+			
+		};
+		
 		
 		this.drawGraphPaper = function() {
 			var cellWidth 	= this.cellWidth; 
@@ -1685,13 +1745,8 @@ define(function() {
 				
 				var point = Math.abs((x - canvas.width/2)/this.scale - this.offsetX);
 				
-				// if(point < 0.00000000002) {
-				// 	ctx.lineWidth = 0.5;
-				// // } else if(Math.floor(point / ((cellWidth + xAlignment)/this.scale)) % 5 < 0.0000002) {
-				// // 	ctx.lineWidth = 0.5;
-				// } else {
-					ctx.lineWidth = 0.1;
-					//}
+				ctx.lineWidth = 1;
+				ctx.strokeStyle = "#ccc";
 			    ctx.beginPath();
 			    ctx.moveTo(x,0);
 			    ctx.lineTo(x,canvas.height);
@@ -1702,13 +1757,8 @@ define(function() {
 				
 				var point = Math.abs((y - canvas.height/2)/this.scale - this.offsetY);
 				
-				// if(point < 0.00000000002) {
-				// 	ctx.lineWidth = 0.5;
-				// } else {
-					ctx.lineWidth = 0.1;
-					//}
-				
-				ctx.strokeStyle = "black";
+				ctx.lineWidth = 1;
+				ctx.strokeStyle = "#ccc";
 			    ctx.beginPath();
 			    ctx.moveTo(0,y);
 			    ctx.lineTo(canvas.width,y);
@@ -1767,6 +1817,7 @@ define(function() {
 				//numFrames = 0,
 				
 				// These variables keep track of time passed.
+				elapsedTime = opts.elapsedTime,
 				lastFrame 	= new Date().getTime(),
 				lastRender	= new Date().getTime(),
 				seconds_between_frames = 1 / opts.fps;
@@ -1785,13 +1836,16 @@ define(function() {
 					
 					// Lets see the time difference
 					dt = (thisFrame - lastFrame)/1000 * opts.timeScale;
-					
+				
+				// Lets keep track of the elapsed time.
+				elapsedTime += dt;
+				
 				// lets set our lastFrame for next time.
 		        lastFrame = thisFrame;
 			
 				if(seconds_between_frames < (thisFrame - lastRender)/1000) {
 					// Lets indicate its time to render
-					postMessage({cmd: "render", objects: opts.objects});
+					postMessage({cmd: "render", objects: opts.objects, elapsedTime: elapsedTime});
 					//numFrames = 0;
 					lastRender = thisFrame;
 				}

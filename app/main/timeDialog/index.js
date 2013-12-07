@@ -18,8 +18,6 @@ module.exports = function(window,document, router) {
 	div.innerHTML = html;
 	
 	this.open = function(timeScale, callback) {
-		
-		console.log(arguments);
 
 		div.querySelector("input").value = timeScale;
 
