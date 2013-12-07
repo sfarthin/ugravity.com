@@ -1,6 +1,7 @@
 <html lang="en"><head><title>uGravity | Universal Gravity Simulator</title><meta name="description" content="Map out planetary bodies and create custom simulations with this interactive web app." /><link rel="stylesheet" href="/app.css" /></head><body><div id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation"><!-- <div class="navbar navbar-inverse navbar-fixed-top" role="navigation"> -->
 	<div class="container-fluid">
 		<ul class="nav navbar-nav navbar-right">
+			<li class="time"><a><span class="glyphicon glyphicon-time"></span> Time <span class="timeScale">1</span>x</a></li>
 			<li class="normalize"><a><span class="glyphicon glyphicon-resize-full"></span> Fit to View</a></li>
 			<li class="reset"><a><span class="glyphicon glyphicon-refresh"></span> Reset</a></li>
 			<li class="start"><a><span class="glyphicon glyphicon-play"></span> Start</a></li>
@@ -28,8 +29,22 @@
 				<li class="dropdown objects">
 					<a class="dropdown-toggle" data-toggle="dropdown">Objects <b class="caret"></b></a>
 					<!-- <ul class="dropdown-menu objects"></ul> -->
-				<ul class="dropdown-menu objects"><li class="add"><a>Add Object</a></li></ul></li>
+				<ul class="dropdown-menu objects"></ul></li>
 			</ul>
 		</div>
 	</div>
-<!-- </div> --></div><canvas id="main-canvas" style="width: 1024px; height: 718px; top: 50px; left: 0px;"></canvas><script src="/app.js"></script></body></html>
+<!-- </div> --></div><canvas id="main-canvas" style="width: 1024px; height: 718px; top: 50px; left: 0px;"></canvas><script src="/app.js"></script><!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(["trackPageView", "load"]);
+  _paq.push(["enableLinkTracking"]);
+
+  (function() {
+    var u="https://stevefar.com/analytics/";
+    _paq.push(["setTrackerUrl", u+"piwik.php"]);
+    _paq.push(["setSiteId", "2"]);
+    var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+    g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Piwik Code --></body></html>

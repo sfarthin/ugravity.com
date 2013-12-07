@@ -6,143 +6,8 @@ module.exports = function(window, document, router, onLoad) {
 	
 }
 },{}],2:[function(require,module,exports){
-var debounce 	= require("debounce"),
-	uGravity 	= require("ugravity"),
-	element;
-
-module.exports = function(window, document, router, navigation, settings) {
-	
-	return {
-		add: function() {
-			
-			// Add window listener
-			this._windowListener = debounce(this.fitCanvasToScreen.bind(this), 100);
-			window.addEventListener('resize', this._windowListener, false);
-			
-			this.fitCanvasToScreen();
-			
-			// if(element.getContext && element.getContext('2d')) {
-			// 	this.uGravity = new uGravity(element, settings);
-			// 	this.uGravity.normalize();
-			// }
-			
-			
-			navigation.updateObjects.bind(navigation)(settings.objects);
-			
-			navigation.on("reset", function() {
-				this.uGravity.load(settings);
-			}.bind(this));
-			
-			navigation.on("stop", function() {
-				console.log("stop");
-				this.uGravity.stop();
-			}.bind(this));
-			
-			navigation.on("start", function() {
-				this.uGravity.start();
-			}.bind(this));
-			
-			navigation.on("normalize", function() {
-				this.normalize();
-			}.bind(this));
-			
-			// 
-			// var uGravity = this.uGravity;
-			// setTimeout(function() {
-			// 	
-			// 	uGravity.stop();
-			// 	
-			// }, 300);
-			
-			
-		},
-		
-		normalize: function() {
-			this.uGravity.normalize();
-		},
-		
-		fitCanvasToScreen: function() {
-			var height = window.innerHeight,
-				width  = window.innerWidth;
-		
-		
-			if(element) {
-				element.parentNode.removeChild(element);
-				element = null;
-			}
-		
-			element = document.createElement("canvas");
-			element.id = "main-canvas";
-			document.body.appendChild(element);
-		
-			// This makes our canvas retina ready
-			element.width 	= width*2;
-			element.height 	= height*2;
-		
-			element.style.width  	= width+"px";
-			element.style.height 	= (height-50)+"px";
-			element.style.height 	= (height-50)+"px";
-			element.style.top 		= "50px";
-			element.style.left		= "0px";
-			
-			// @todo, lets reinstaniate the whole uGravity thing here instead of just rendering.
-			// if(this.uGravity) {
-			// 	this.uGravity.render();
-			// }
-			// 
-			if(element.getContext && element.getContext('2d')) {
-				this.uGravity = new uGravity(element, settings);
-				this.uGravity.normalize();
-			}
-			
-		},
-		
-		export: function() {
-			return this.uGravity.export();
-		},
-		
-		update: function(new_settings) {
-			settings = new_settings;
-			this.uGravity.load(settings);
-		},
-		
-		remove: function() {
-			
-			document.body.removeChild(element);
-			
-			window.removeEventListener('resize', this._windowListener, false);
-			
-		}
-		
-	};
-	
-	//$(document.body).append(canvas);
-	
-	// var fitCanvasToScreen = _.debounce(function() {
-	// 	var height = $(window).height(),
-	// 		width  = $(window).width();
-	// 
-	// 	$(canvas).css({
-	// 		top: 50,
-	// 		left: 0,
-	// 		height: height - 50,
-	// 		width: width
-	// 	});
-	// 
-	// }, 300);
-	// 
-	// $(window).bind("resize", fitCanvasToScreen);
-	// fitCanvasToScreen();
-	// 
-	// return {
-	// 	remove: function() {
-	// 		$(window).unbind("resize", fitCanvasToScreen);
-	// 		$(canvas).remove();
-	// 	}
-	// }	
-}
-},{"debounce":11,"ugravity":13}],3:[function(require,module,exports){
-var html = "<!-- <div name=\"newModal\" class=\"modal fade in\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"newModal\" aria-hidden=\"false\" style=\"display: block;\"> -->\n\t<div class=\"modal-dialog\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n\t\t\t\t<!-- <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button> -->\n\t\t\t\t<h4 class=\"modal-title\">Object Properties</h4>\n\t\t\t</div>\n\t\t\t<div class=\"modal-body\">\n\t\t\t\t<div class=\"form-horizontal\" role=\"form\">\n\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Presets</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"earth\">Earth</button>\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"sun\">Sun</button>\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"moon\">Moon</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t<!-- General -->\n\t\t\t\t\t<div class=\"page-header\"><h5>General</h5></div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"name\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Color</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<select class=\"form-control\" name=\"color\">\n\t\t\t\t\t\t\t\t<option value=\"#FF0000\">Red</option>\n\t\t\t\t\t\t\t\t<option value=\"#00FF00\">Green</option>\n\t\t\t\t\t\t\t\t<option value=\"#0000FF\">Blue</option>\n\t\t\t\t\t\t\t\t<option value=\"#FFFF00\">Yellow</option>\n\t\t\t\t\t\t\t\t<option value=\"#660099\">Purple</option>\n\t\t\t\t\t\t\t\t<option value=\"#CC3300\">Orange</option>\n\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"mass\" class=\"col-sm-5 control-label\">Mass (kg)</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"mass\" placeholder=\"(i.e. 2.0255e+25)\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"radius_in_km\" class=\"col-sm-5 control-label\">Radius (km)</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"radius_in_km\" placeholder=\"(e.g., the Earth's radius is 6,371 km)\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<!-- Position -->\n\t\t\t\t\t<div class=\"position_group\">\n\t\t\t\t\t\t<div class=\"page-header\"><h5>Position relative to another object</h5></div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object\" class=\"col-sm-5 control-label\">Object</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<select class=\"form-control\" name=\"relative_object\">\n\t\t\t\t\t\t\t\t{objects}\n\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object_distance\" class=\"col-sm-5 control-label\">Distance (AU)</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"relative_object_distance\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object_direction\" class=\"col-sm-5 control-label\">Direction (degrees)<span class=\"glyphicon glyphicon-circle-arrow-up direction\"></span></label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" min=\"0\" max=\"360\" step=\"5\" value=\"0\" name=\"relative_object_direction\">\n\t\t\t\t\t\t\t\t<!-- <input type=\"text\" class=\"form-control\" name=\"direction\" placeholder=\"(i.e. 45)\"> -->\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<div class=\"page-header\"><h5>Velocity</h5></div>\n\t\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t\t    <label for=\"velocity\" class=\"col-sm-5 control-label\">Velocity (AU/second)</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"velocity\" placeholder=\"(i.e. 0.000006 to stay in orbit)\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t  </div>\n\t\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t\t    <label for=\"velocity_direction\" class=\"col-sm-5 control-label\">Velocity direction (degrees)<span class=\"glyphicon glyphicon-circle-arrow-up velocity_direction\"></span></label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" min=\"0\" max=\"360\" step=\"5\" value=\"0\" name=\"velocity_direction\">\n\t\t\t\t\t\t\t<!-- <input type=\"text\" class=\"form-control\" name=\"velocity_direction\" placeholder=\"(i.e. 45)\"> -->\n\t\t\t\t\t\t</div>\n\t\t\t\t\t  </div>\n\t\t\t\t  </div>\n\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n\t\t\t\t<button type=\"button\" class=\"btn remove btn-default\" data-dismiss=\"modal\">Remove Object</button>\n\t\t\t\t<button type=\"button\" class=\"btn save btn-primary\" data-dismiss=\"modal\">Save Object</button>\n\t\t\t</div>\n\t\t</div><!-- /.modal-content -->\n\t</div><!-- /.modal-dialog -->\n<!-- </div> -->".toString();
+var html 	= "<!-- <div name=\"newModal\" class=\"modal fade in\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"newModal\" aria-hidden=\"false\" style=\"display: block;\"> -->\n\t<div class=\"modal-dialog\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n\t\t\t\t<!-- <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button> -->\n\t\t\t\t<h4 class=\"modal-title\">Object Properties</h4>\n\t\t\t</div>\n\t\t\t<div class=\"modal-body\">\n\t\t\t\t<div class=\"form-horizontal\" role=\"form\">\n\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Presets</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"earth\">Earth</button>\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"sun\">Sun</button>\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"moon\">Moon</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t<!-- General -->\n\t\t\t\t\t<div class=\"page-header\"><h5>General</h5></div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"name\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Color</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<select class=\"form-control\" name=\"color\">\n\t\t\t\t\t\t\t\t<option value=\"#FF0000\">Red</option>\n\t\t\t\t\t\t\t\t<option value=\"#00FF00\">Green</option>\n\t\t\t\t\t\t\t\t<option value=\"#0000FF\">Blue</option>\n\t\t\t\t\t\t\t\t<option value=\"#FFFF00\">Yellow</option>\n\t\t\t\t\t\t\t\t<option value=\"#660099\">Purple</option>\n\t\t\t\t\t\t\t\t<option value=\"#CC3300\">Orange</option>\n\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"mass\" class=\"col-sm-5 control-label\">Mass (kg)</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"mass\" placeholder=\"(i.e. 2.0255e+25)\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"radius_in_km\" class=\"col-sm-5 control-label\">Radius (km)</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"radius_in_km\" placeholder=\"(e.g., the Earth's radius is 6,371 km)\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<!-- Position -->\n\t\t\t\t\t<div class=\"position_group\">\n\t\t\t\t\t\t<div class=\"page-header\"><h5>Position relative to another object</h5></div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object\" class=\"col-sm-5 control-label\">Object</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<select class=\"form-control\" name=\"relative_object\">\n\t\t\t\t\t\t\t\t{objects}\n\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object_distance\" class=\"col-sm-5 control-label\">Distance (AU)</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"relative_object_distance\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object_direction\" class=\"col-sm-5 control-label\">Direction (degrees)<span class=\"glyphicon glyphicon-circle-arrow-up direction\"></span></label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" min=\"0\" max=\"360\" step=\"5\" value=\"0\" name=\"relative_object_direction\">\n\t\t\t\t\t\t\t\t<!-- <input type=\"text\" class=\"form-control\" name=\"direction\" placeholder=\"(i.e. 45)\"> -->\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<div class=\"page-header\"><h5>Velocity</h5></div>\n\t\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t\t    <label for=\"velocity\" class=\"col-sm-5 control-label\">Velocity (AU/second)</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"velocity\" placeholder=\"(i.e. 0.000006 to stay in orbit)\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t  </div>\n\t\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t\t    <label for=\"velocity_direction\" class=\"col-sm-5 control-label\">Velocity direction (degrees)<span class=\"glyphicon glyphicon-circle-arrow-up velocity_direction\"></span></label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" min=\"0\" max=\"360\" step=\"5\" value=\"0\" name=\"velocity_direction\">\n\t\t\t\t\t\t\t<!-- <input type=\"text\" class=\"form-control\" name=\"velocity_direction\" placeholder=\"(i.e. 45)\"> -->\n\t\t\t\t\t\t</div>\n\t\t\t\t\t  </div>\n\t\t\t\t  </div>\n\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n\t\t\t\t<button type=\"button\" class=\"btn remove btn-default\" data-dismiss=\"modal\">Remove Object</button>\n\t\t\t\t<button type=\"button\" class=\"btn save btn-primary\" data-dismiss=\"modal\">Save Object</button>\n\t\t\t</div>\n\t\t</div><!-- /.modal-content -->\n\t</div><!-- /.modal-dialog -->\n<!-- </div> -->".toString(),
+	extend 	= require("../extend");
 
 module.exports = function(window, document, router) {
 	
@@ -152,192 +17,6 @@ module.exports = function(window, document, router) {
 	var get_value = function(name) { return div.querySelector("[name="+name+"]").value; },
 		set 	  = function(name, value) { try { return div.querySelector("[name="+name+"]").value = value; } catch(e) { console.log("cannot set " + name); }  };
 	
-	
-	var api = {
-		listeners: {},
-		on: function(msg, func, context) {
-			
-			if(!this.listeners[msg])
-				this.listeners[msg] = [];
-				
-			this.listeners[msg].push({func: func, context: context});
-			
-		},
-		trigger: function(msg) {
-			
-			if(this.listeners[msg]) {
-				for(var i in this.listeners[msg]) {
-					var func 	= this.listeners[msg][i].func,
-						context	= this.listeners[msg][i].context;
-					
-					func.apply((context ? context : this), [].slice.call(arguments, 1));
-				}
-			}
-			
-		},
-		
-		open: function(settings, editObject) {
-			
-			div.innerHTML = html.replace(/{link}/g, window.location.protocol+"//"+window.location.host+"/project/"+encodeURI(JSON.stringify(settings)));
-			
-			// Build dropdown for the relative object list
-			var objects_html = [], j = 0;
-			settings.objects.sort(function(a,b) {
-				if(a.mass < b.mass) return 1; else return -1;
-			}).forEach(function(object) {
-				objects_html[j++] = "<option value='"+escape(object.id)+"'>"+object.name+"</option>";
-			});
-			
-			// If there are no objects or if the object has a position already without a relative object
-			if((!editObject && !settings.objects.length) || (editObject && !editObject.relative_object)) {
-				div.querySelector(".position_group").style.display = "none";
-			} else {
-				div.innerHTML = html.replace(/{objects}/g, objects_html.join(""));
-			}
-			
-			// If we are editing an object that already exists, lets set the form fields.
-			if(editObject) {
-				var fields = ["name", "color", "mass", "radius_in_km", "relative_object", "relative_object_distance", "relative_object_direction", "velocity", "velocity_direction"];
-				
-				fields.forEach(function(field) {
-					set(field, editObject[field]);
-				});
-				
-			}
-			
-			
-			// Lets listen for button clicks.
-			this._modalContentListener = function(e) {
-				
-				// @todo cleannnnnn UP!!!!
-				// The buttons at the bottom
-				if(e.toElement.getAttribute("data-dismiss") == "modal") {
-					
-					if(e.toElement.className.match("save")) {
-
-						var x, y,
-							relative_object_id = get_value("relative_object"),
-							distance  		  = Number(get_value("relative_object_distance")),
-							direction_radians = Number(get_value("relative_object_direction")) * Math.PI / 180,
-							relative_object   = settings.objects.filter(function(object) {
-													return object.id == relative_object_id;
-												})[0];
-						
-						// Lets determine if position.						
-						if(relative_object && (distance || distance == 0) && (direction_radians || direction_radians == 0)) {
-							x = relative_object.x + (Math.sin(direction_radians)*distance);
-							y = relative_object.y - (Math.cos(direction_radians)*distance);
-						} else {
-							//
-							x = (editObject && editObject.x ? editObject.x : 0);
-							y = (editObject && editObject.y ? editObject.y : 0);
-						}
-							
-						var velocity_direction_radians = Number(get_value("velocity_direction")) * Math.PI / 180,
-							velocity 				   = Number(get_value("velocity"));
-							
-						var updatedObject = {
-							// Essiential
-							id: 		(editObject && editObject.id ? editObject.id : new Date().getTime()+"-"+Math.round((Math.random()*100))),
-							"name": 	get_value("name"),
-							"color": 	get_value("color"),
-							"mass": 	Number(get_value("mass").replace(/,/g, "")),
-							"radius": 	Number(get_value("radius_in_km").replace(/,/g, ""))/(1.496e+8), // convert kilometers to AU
-							"y": 		Number(y),
-							"x": 		Number(x),
-							"velocityX": (Math.sin(velocity_direction_radians)*velocity),
-							"velocityY": (Math.cos(velocity_direction_radians)*velocity),
-							
-							// Additional for uGravity.com.. we can keep these as text so we can use equations.
-							"radius_in_km":    get_value("radius_in_km"),
-							"relative_object": get_value("relative_object"),
-							"relative_object_distance": get_value("relative_object_distance"),
-							"relative_object_direction":get_value("relative_object_direction"),
-							"velocity": get_value("velocity"),
-							"velocity_direction": get_value("velocity_direction"),
-						};
-						
-						this.trigger("save", updatedObject);
-					} else if(e.toElement.className.match("remove")) {
-						this.trigger("remove", editObject);
-					}
-					this.close();
-				}
-				
-				
-				if(e.toElement.getAttribute("data-preset")) {
-					var preset = e.toElement.getAttribute("data-preset");
-					
-					if(preset == "earth") {
-						set("name", "Earth");
-						set("mass", 5.9721986e+24);
-						set("radius_in_km", 6371);
-						set("relative_object_distance", 1);
-						set("velocity_direction", 90);
-						
-						// Earth moves at 67000 miles/hr
-						// 92955807.3 miles in one AU
-						set("velocity", 67000/ 92955807.3 / 60 / 60);
-						
-					}
-					
-					this._velocityDirectionListener();
-					this._directionListener();
-					
-				}
-				
-			}.bind(this);
-			div.querySelector(".modal-content").addEventListener("click", this._modalContentListener, false);
-			
-			// Lets have arrows showing the direction.
-			this._velocityDirectionListener = function() {
-				var degrees = parseInt(get_value("velocity_direction")) % 360;
-				div.querySelector(".velocity_direction.glyphicon").setAttribute("style", " " +  
-					"-ms-transform:rotate("+degrees+"deg);" +
-					"-moz-transform:rotate("+degrees+"deg);" +
-					"-webkit-transform:rotate("+degrees+"deg);" +
-					"-o-transform:rotate("+degrees+"deg);" +
-					"transform:rotate("+degrees+"deg);");
-				
-			};
-			div.querySelector("[name=velocity_direction]").addEventListener("keyup", this._velocityDirectionListener, false);
-			div.querySelector("[name=velocity_direction]").addEventListener("change", this._velocityDirectionListener, false);
-			this._velocityDirectionListener(); // Lets make sure its set initially.
-			
-			this._directionListener = function() {
-				var degrees = parseInt(get_value("relative_object_direction")) % 360;
-				div.querySelector(".direction.glyphicon").setAttribute("style", " " +  
-					"-ms-transform:rotate("+degrees+"deg);" +
-					"-moz-transform:rotate("+degrees+"deg);" +
-					"-webkit-transform:rotate("+degrees+"deg);" +
-					"-o-transform:rotate("+degrees+"deg);" +
-					"transform:rotate("+degrees+"deg);");
-				
-			};
-			div.querySelector("[name=relative_object_direction]").addEventListener("keyup", this._directionListener, false);
-			div.querySelector("[name=relative_object_direction]").addEventListener("change", this._directionListener, false);
-			this._directionListener(); // Lets make sure its set initially.
-			
-			document.body.appendChild(backdrop);
-			document.body.appendChild(div);
-			
-		},
-		
-		close: function() {
-			
-			div.querySelector(".modal-content").removeEventListener("click", this._modalContentListener, false);			
-			div.querySelector("[name=velocity_direction]").removeEventListener("keyup", this._velocityDirectionListener, false);
-			div.querySelector("[name=velocity_direction]").removeEventListener("change", this._velocityDirectionListener, false);
-			div.querySelector("[name=relative_object_direction]").removeEventListener("keyup", this._directionListener, false);
-			div.querySelector("[name=relative_object_direction]").removeEventListener("change", this._directionListener, false);
-			
-			document.body.removeChild(backdrop);
-			document.body.removeChild(div);
-			
-			div = null;
-		}
-	};
-	
 
 	div.id = "editModal";
 	div.className = "modal fade In";
@@ -346,430 +25,626 @@ module.exports = function(window, document, router) {
 	div.setAttribute("aria-labelledby", "editModal");
 	div.setAttribute("aria-hidden", "false");
 	div.style.display = "block";
-	
+
 
 	backdrop.className = "modal-backdrop fade in";
 	
-	return api;
+	this.open = function(settings, editObject, callback) {
+		
+		div.innerHTML = html.replace(/{link}/g, window.location.protocol+"//"+window.location.host+"/project/"+encodeURI(JSON.stringify(settings)));
+		
+		// Build dropdown for the relative object list
+		if(settings.objects) {
+			var objects_html = [], j = 0;
+			settings.objects.sort(function(a,b) {
+				if(a.mass < b.mass) return 1; else return -1;
+			}).forEach(function(object) {
+				objects_html[j++] = "<option value='"+escape(object.id)+"'>"+object.name+"</option>";
+			});
+		}
+		
+		// If there are no objects or if the object has a position already without a relative object
+		if((!editObject && (!settings.objects || !settings.objects.length)) || (editObject && !editObject.relative_object)) {
+			div.querySelector(".position_group").style.display = "none";
+		} else {
+			div.innerHTML = html.replace(/{objects}/g, objects_html.join(""));
+		}
+		
+		// If we are editing an object that already exists, lets set the form fields.
+		if(editObject) {
+			var fields = ["name", "color", "mass", "radius_in_km", "relative_object", "relative_object_distance", "relative_object_direction", "velocity", "velocity_direction"];
+			
+			fields.forEach(function(field) {
+				set(field, editObject[field]);
+			});
+			
+		}
+		
+		
+		// Lets listen for button clicks.
+		this._modalContentListener = function(e) {
+			
+			// @todo cleannnnnn UP!!!!
+			// The buttons at the bottom
+			if(e.toElement.getAttribute("data-dismiss") == "modal") {
+				
+				if(e.toElement.className.match("save")) {
+					
+					try { _paq.push(['trackPageView', 'object/save']); } catch(e) {}
+
+					var x, y,
+						relative_object_id = get_value("relative_object"),
+						distance  		  = Number(get_value("relative_object_distance")),
+						direction_radians = Number(get_value("relative_object_direction")) * Math.PI / 180,
+						relative_object   = (settings.objects ? settings.objects.filter(function(object) {
+												return object.id == relative_object_id;
+											})[0] : null);
+					
+					// Lets determine if position.						
+					if(relative_object && (distance || distance == 0) && (direction_radians || direction_radians == 0)) {
+						x = relative_object.x + (Math.sin(direction_radians)*distance);
+						y = relative_object.y - (Math.cos(direction_radians)*distance);
+					} else {
+						//
+						x = (editObject && editObject.x ? editObject.x : 0);
+						y = (editObject && editObject.y ? editObject.y : 0);
+					}
+						
+					var velocity_direction_radians = Number(get_value("velocity_direction")) * Math.PI / 180,
+						velocity 				   = Number(get_value("velocity"));
+						
+					var updatedObject = {
+						// Essiential
+						id: 		(editObject && editObject.id ? editObject.id : new Date().getTime()+"-"+Math.round((Math.random()*100))),
+						"name": 	get_value("name"),
+						"color": 	get_value("color"),
+						"mass": 	Number(get_value("mass").replace(/,/g, "")),
+						"radius": 	Number(get_value("radius_in_km").replace(/,/g, ""))/(1.496e+8), // convert kilometers to AU
+						"y": 		Number(y),
+						"x": 		Number(x),
+						"velocityX": (Math.sin(velocity_direction_radians)*velocity),
+						"velocityY": (Math.cos(velocity_direction_radians)*velocity),
+						
+						// Additional for uGravity.com.. we can keep these as text so we can use equations.
+						"radius_in_km":    get_value("radius_in_km"),
+						"relative_object": get_value("relative_object"),
+						"relative_object_distance": get_value("relative_object_distance"),
+						"relative_object_direction":get_value("relative_object_direction"),
+						"velocity": get_value("velocity"),
+						"velocity_direction": get_value("velocity_direction"),
+					};
+					
+					callback(updatedObject);
+				} else if(e.toElement.className.match("remove")) {
+					
+					try { _paq.push(['trackPageView', 'object/remove']); } catch(e) {}
+					
+				}
+				this.close();
+			}
+			
+			
+			if(e.toElement.getAttribute("data-preset")) {
+				var preset = e.toElement.getAttribute("data-preset");
+				
+				if(preset == "earth") {
+					
+					try { _paq.push(['trackPageView', 'preset/earth']); } catch(e) {}
+					
+					set("name", "Earth");
+					set("mass", 5.9721986e+24);
+					set("radius_in_km", 6371);
+					set("relative_object_distance", 1);
+					set("velocity_direction", 90);
+					
+					// Earth moves at 67000 miles/hr
+					// 92955807.3 miles in one AU
+					set("velocity", 67000/ 92955807.3 / 60 / 60);
+					
+				}
+				
+				this._velocityDirectionListener();
+				this._directionListener();
+				
+			}
+			
+		}.bind(this);
+		div.querySelector(".modal-content").addEventListener("click", this._modalContentListener, false);
+		
+		// Lets have arrows showing the direction.
+		this._velocityDirectionListener = function() {
+			var degrees = parseInt(get_value("velocity_direction")) % 360;
+			div.querySelector(".velocity_direction.glyphicon").setAttribute("style", " " +  
+				"-ms-transform:rotate("+degrees+"deg);" +
+				"-moz-transform:rotate("+degrees+"deg);" +
+				"-webkit-transform:rotate("+degrees+"deg);" +
+				"-o-transform:rotate("+degrees+"deg);" +
+				"transform:rotate("+degrees+"deg);");
+			
+		};
+		div.querySelector("[name=velocity_direction]").addEventListener("keyup", this._velocityDirectionListener, false);
+		div.querySelector("[name=velocity_direction]").addEventListener("change", this._velocityDirectionListener, false);
+		this._velocityDirectionListener(); // Lets make sure its set initially.
+		
+		this._directionListener = function() {
+			var degrees = parseInt(get_value("relative_object_direction")) % 360;
+			div.querySelector(".direction.glyphicon").setAttribute("style", " " +  
+				"-ms-transform:rotate("+degrees+"deg);" +
+				"-moz-transform:rotate("+degrees+"deg);" +
+				"-webkit-transform:rotate("+degrees+"deg);" +
+				"-o-transform:rotate("+degrees+"deg);" +
+				"transform:rotate("+degrees+"deg);");
+			
+		};
+		div.querySelector("[name=relative_object_direction]").addEventListener("keyup", this._directionListener, false);
+		div.querySelector("[name=relative_object_direction]").addEventListener("change", this._directionListener, false);
+		this._directionListener(); // Lets make sure its set initially.
+		
+		document.body.appendChild(backdrop);
+		document.body.appendChild(div);
+		
+	}
+	
+	this.close = function() {
+		
+		div.querySelector(".modal-content").removeEventListener("click", this._modalContentListener, false);			
+		div.querySelector("[name=velocity_direction]").removeEventListener("keyup", this._velocityDirectionListener, false);
+		div.querySelector("[name=velocity_direction]").removeEventListener("change", this._velocityDirectionListener, false);
+		div.querySelector("[name=relative_object_direction]").removeEventListener("keyup", this._directionListener, false);
+		div.querySelector("[name=relative_object_direction]").removeEventListener("change", this._directionListener, false);
+		
+		document.body.removeChild(backdrop);
+		document.body.removeChild(div);
+	}
+	
+	return this;
 	
 }
-},{}],4:[function(require,module,exports){
-// var ObjectList = ,
-// 	template = require('micro-template').template;
-// 	
-// template.get = function (id) { return require('fs').readFileSync(id + '.html', 'utf-8').toString() };
+},{"../extend":4}],3:[function(require,module,exports){
+var Emitter = {};
 
+Emitter.on = function(msg, func, context) {
+	
+	if(!this._listeners) this._listeners = {}
+	
+	if(!this._listeners[msg])
+		this._listeners[msg] = [];
+		
+	this._listeners[msg].push({func: func, context: context});
+	
+};
+
+Emitter.trigger = function(msg) {
+	
+	if(!this._listeners) this._listeners = {}
+	
+	if(this._listeners[msg]) {
+		for(var i in this._listeners[msg]) {
+			var func 	= this._listeners[msg][i].func,
+				context	= this._listeners[msg][i].context;
+			
+			func.apply((context ? context : this), [].slice.call(arguments, 1));
+		}
+	}	
+};
+
+module.exports = Emitter;
+},{}],4:[function(require,module,exports){
+module.exports = function(obj) {
+  Array.prototype.slice.call(arguments, 1).forEach(function(source) {
+    if (source) {
+      for (var prop in source) {
+        obj[prop] = source[prop];
+      }
+    }
+  });
+  return obj;
+};
+},{}],5:[function(require,module,exports){
+// Libraries
+var debounce 	= require("debounce"),
+	uGravity 	= require("ugravity");
+
+// interfaces
 var Navigation	= require("./navigation/index"),
-	Canvas 		= require("./canvas/index.js"),
-	ObjectList 	= require("./object-list/index.js"),
 	SaveDialog  = require("./saveDialog/index"),
-	EditDialog 	= require("./editObject/index"),
-	package_json= JSON.parse("{\n  \"name\": \"uGravity.com\",\n  \"description\": \"Map out planetary bodies and create custom simulations with this interactive web app.\",\n  \"version\": \"0.0.1\",\n  \"homepage\": \"https://uGravity.com\",\n  \"author\": \"Steve Farthing <me@stevefar.com> (https://stevefar.com)\",\n  \"license\": \"GPL\",\n  \"dependencies\": {\n    \"jsdom\": \"~0.8.8\",\n    \"location-bar\": \"~1.0.0\",\n    \"brfs\": \"0.0.8\",\n    \"jquery\": \"~1.8.3\",\n    \"step\": \"0.0.5\",\n    \"underscore\": \"~1.5.2\",\n    \"express\": \"~3.4.4\",\n    \"micro-template\": \"~0.1.2\",\n    \"debounce\": \"0.0.3\",\n    \"ugravity\": \"0.0.1\",\n    \"browserify\": \"~2.36.1\"\n  },\n  \"devDependencies\": {\n    \"grunt\": \"~0.4.2\",\n    \"grunt-contrib-less\": \"~0.8.2\",\n    \"grunt-contrib-uglify\": \"~0.2.7\",\n    \"grunt-contrib-watch\": \"~0.5.3\",\n    \"bower\": \"~1.2.7\",\n    \"grunt-contrib-copy\": \"~0.4.1\"\n  }\n}\n".toString());
+	EditDialog 	= require("./editDialog/index"),
+	TimeDialog 	= require("./timeDialog/index");
+
+// Package information
+var package_json = JSON.parse("{\n  \"name\": \"uGravity.com\",\n  \"description\": \"Map out planetary bodies and create custom simulations with this interactive web app.\",\n  \"version\": \"0.0.1\",\n  \"homepage\": \"https://uGravity.com\",\n  \"author\": \"Steve Farthing <me@stevefar.com> (https://stevefar.com)\",\n  \"license\": \"GPL\",\n  \"dependencies\": {\n    \"jsdom\": \"~0.8.8\",\n    \"location-bar\": \"~1.0.0\",\n    \"brfs\": \"0.0.8\",\n    \"jquery\": \"~1.8.3\",\n    \"step\": \"0.0.5\",\n    \"underscore\": \"~1.5.2\",\n    \"express\": \"~3.4.4\",\n    \"micro-template\": \"~0.1.2\",\n    \"debounce\": \"0.0.3\",\n    \"ugravity\": \"0.0.1\",\n    \"browserify\": \"~2.36.1\"\n  },\n  \"devDependencies\": {\n    \"grunt\": \"~0.4.2\",\n    \"grunt-contrib-less\": \"~0.8.2\",\n    \"grunt-contrib-uglify\": \"~0.2.7\",\n    \"grunt-contrib-watch\": \"~0.5.3\",\n    \"bower\": \"~1.2.7\",\n    \"grunt-contrib-copy\": \"~0.4.1\"\n  }\n}\n".toString());
 
 module.exports = function(window, document, router, onLoad) {
 	
-	var settings,
-		empty = {objects: []},
-		changeSettings = function(new_settings) {
-			settings = new_settings;
-			
-			// Lets update our navigation pulldown
-			navigation.updateObjects(settings.objects);
-			
-			// Lets let ugravity simulation know.
-			canvas.update(settings);
-			
-			// lets save it in local storage in case for a page reload.
-			localStorage["ugravity-last-project"] = JSON.stringify(settings);
-			
-			canvas.normalize();
-			
-		};
-	
-	if(window.location.href.match("project/")) {
-		try {
-			settings = JSON.parse(decodeURI(window.location.href.match(/project\/(.+)$/)[1]));
-			localStorage["ugravity-last-project"] = JSON.stringify(settings);
-			router.update("/", {replace: true});
-		} catch(e) {}
-				
-	} else {
-		if(window.localStorage && localStorage["ugravity-last-project"]) {
-			settings = JSON.parse(localStorage["ugravity-last-project"]);
-		}
+	// Lets make our instances.
+	var navigation = new Navigation(window, document, router),
+		saveDialog = new SaveDialog(window, document, router),
+		editDialog = new EditDialog(window, document, router),
+		timeDialog = new TimeDialog(window, document, router);
+
+
+	/**
+	*
+	* Lets create the canvas with the simulation and make sure it always fits to the screen, even when resized.
+	*
+	**/
+	// This variable contains the settings for the simulation without any simulation applied, so we can reset our simulation with these settings.
+	this._settings = {objects: []};
+	this.changeSettings = function(new_settings) {
+		this._settings = new_settings;
+		
+		// Lets update our navigation dropdown
+		navigation.objectDropdown.update(this._settings.objects);
+		
+		// Lets let ugravity simulation know.
+		this.uGravity.load(this._settings);
+		
+		// lets save it in local storage in case for a page reload.
+		localStorage["ugravity-last-project"] = JSON.stringify(this._settings);
+		
+		this.uGravity.normalize();
 	}
 	
-	// Lets assign ids if there are none.
-	if(settings && settings.objects) {
-		for(var i in settings.objects) {
-			if(!settings.objects[i].id)
-				settings.objects[i].id = i;
+	
+	/**
+	*
+	* Lets create the canvas with the simulation and make sure it always fits to the screen, even when resized.
+	*
+	**/
+	this.createCanvasToFitScreen = function() {
+		var height = window.innerHeight,
+			width  = window.innerWidth;
+
+		// If our canvas exists, lets kill it.
+		if(this.canvas) {
+			this.canvas.parentNode.removeChild(element);
+			this.canvas = null;
 		}
+		
+		// Create our canvas and add it to the screen
+		this.canvas = document.createElement("canvas");
+		this.canvas.id = "main-canvas";
+		document.body.appendChild(this.canvas);
+	
+		// This makes our canvas retina ready
+		this.canvas.width 	= width*2;
+		this.canvas.height 	= height*2;
+		
+		// Lets make it fit the screen but not cover the top menu
+		this.canvas.style.width  	= width+"px";
+		this.canvas.style.height 	= (height-50)+"px";
+		this.canvas.style.height 	= (height-50)+"px";
+		this.canvas.style.top 		= "50px";
+		this.canvas.style.left		= "0px";
+		
+		// apply uGravity simulator to the canvas.
+		if(this.canvas.getContext && this.canvas.getContext('2d')) {
+			this.uGravity = new uGravity(this.canvas, this._settings);
+		}		
+	};
+	
+	this.reset 		= function() { this.uGravity.load(this._settings); }
+	this.stop 		= function() { this.uGravity.stop(); }
+	this.start 		= function() { this.uGravity.start(); }
+	this.normalize 	= function() { this.uGravity.normalize(); }
+
+	this.changeSpeed = function() {
+		timeDialog.open(this.uGravity.export().timeScale, function(timeScale) {
+			// Lets append our settings.
+			this._settings.timeScale = timeScale;
+			localStorage["ugravity-last-project"] = JSON.stringify(this._settings);
+			
+			navigation.updateTimeScale(timeScale);
+			this.uGravity.load({timeScale: timeScale});
+
+		}.bind(this));
 	}
 	
-	// Lets set the title and keywords
-	var title = document.createElement("title");
-	title.innerHTML = "uGravity | Universal Gravity Simulator";
-	document.head.appendChild(title);
+	this.saveProject 	= function() { saveDialog.open(this._settings); }
+	this.newProject 	= function() { this.changeSettings({objects: []}); }
+
+	this.newObject = function() {
+		editDialog.open(this._settings, null, function(object) {
+			if(!this._settings.objects) this._settings.objects = [];
+			this._settings.objects.push(object);
+			this.changeSettings(this._settings);
+		}.bind(this));
+	}
 	
-	var meta_description = document.createElement("meta");
-	meta_description.setAttribute("name", "description");
-	meta_description.setAttribute("content", package_json.description);
-	document.head.appendChild(meta_description);
-	
-	if(!settings)
-		settings = empty;
-	
-	
-	var navigation = new Navigation(window, document),
-		canvas 	   = new Canvas(	window, document, router, navigation, settings),
-		objectList = new ObjectList(window, document),
-		saveDialog = new SaveDialog(window, document, router);
-	
-	navigation.add();
-	canvas.add();
-	
-//	canvas.normalize();
-	
-	navigation.on("save", function() {
-		saveDialog.open(settings);
-	});
-	
-	navigation.on("new", function() {
-		canvas.update(empty);
-		changeSettings(empty);
-		localStorage["ugravity-last-project"] = JSON.stringify(empty);
-	});
-	
-	navigation.on("newobject", function() {
-		var dialog = new EditDialog(window, document, router);
-		
-		dialog.open(settings);
-		
-		dialog.on("save", function(object) {
-			settings.objects.push(object);
-			changeSettings(settings);
-		});
-		
-	});
-	
-	navigation.on("editobject", function(objectid) {
-		
-		
-		
-		var dialog = new EditDialog(window, document, router),
-			editObject = settings.objects.filter(function(o) {
-				return o.id == objectid;
-			})[0];
-		
+	this.editObject = function(objectid) {
+		// Lets find the object
+		var editObject = this._settings.objects.filter(function(o) { return o.id == objectid; })[0];
+
 		// lets remove it from the settings...
-		settings.objects = settings.objects.filter(function(object) {
-			return objectid != object.id;
-		});
+		this._settings.objects = this._settings.objects.filter(function(object) { return editObject != object; });
+		this.changeSettings(this._settings);
+
+		// Lets open the dialog
+		editDialog.open(this._settings, editObject, function(object) {
+			this._settings.objects.push(object);
+			this.changeSettings(this._settings);			
+		}.bind(this));
+	}
+	
+	
+	
+	/**
+	*
+	* Our main init method
+	*
+	**/
+	this.init = function() {
 		
-		changeSettings(settings);
+	
+		/**
+		*
+		* Lets set a title and keyword description.
+		*
+		**/
+		var title = document.createElement("title");
+		title.innerHTML = "uGravity | Universal Gravity Simulator";
+		document.head.appendChild(title);
+	
+		var meta_description = document.createElement("meta");
+		meta_description.setAttribute("name", "description");
+		meta_description.setAttribute("content", package_json.description);
+		document.head.appendChild(meta_description);
 		
-		dialog.open(settings, editObject);
+		/**
+		*
+		* Lets create the canvas with the simulation and make sure it always fits to the screen, even when resized.
+		*
+		**/
+		this._windowListener = debounce(this.createCanvasToFitScreen.bind(this), 100);
+		window.addEventListener('resize', this._windowListener, false);
+		this.createCanvasToFitScreen();
 		
-		dialog.on("save", function(object) {
-			settings.objects.push(object);
-			changeSettings(settings);
-		});
 		
-	});
+		/**
+		*
+		* Lets see if some settings were passed in or exist from a previous project
+		*
+		**/
+		if(window.location.href.match("project/")) {
+			
+			// Lets decode the settings from the URL
+			try { this.changeSettings(JSON.parse(decodeURI(window.location.href.match(/project\/(.+)$/)[1]))); } catch(e) {}
+			router.update("/", {replace: true});
+				
+		} else {
+			if(window.localStorage && localStorage["ugravity-last-project"]) {
+				// Lets grab these settings from local storage.
+				try { this.changeSettings(JSON.parse(localStorage["ugravity-last-project"])); } catch(e) {}
+			}
+		}
+		
+		// Lets make sure we show the correct time Scale at the top of the screen.
+		if(this.uGravity) {
+			console.log(this._settings);
+			navigation.updateTimeScale(this.uGravity.export().timeScale);
+		}
+		
+		/**
+		*
+		* Lets handle interactions with our navigation
+		*
+		**/
+		navigation.on("reset", 		this.reset.bind(this));
+		navigation.on("stop", 		this.stop.bind(this));
+		navigation.on("start", 		this.start.bind(this));
+		navigation.on("normalize", 	this.normalize.bind(this));
+		navigation.on("time", 		this.changeSpeed.bind(this));
+		navigation.on("save", 		this.saveProject.bind(this));
+		navigation.on("new", 		this.newProject.bind(this));
+		navigation.on("newobject", 	this.newObject.bind(this));
+		navigation.on("editobject", this.editObject.bind(this));
+		
+	}
+	
+	this.init();
 	
 	onLoad();
 };
-},{"./canvas/index.js":2,"./editObject/index":3,"./navigation/index":5,"./object-list/index.js":7,"./saveDialog/index":8}],5:[function(require,module,exports){
-var html = "<!-- <div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\"> -->\n\t<div class=\"container-fluid\">\n\t\t<ul class=\"nav navbar-nav navbar-right\">\n\t\t\t<li class=\"normalize\"><a><span class=\"glyphicon glyphicon-resize-full\"></span> Fit to View</a></li>\n\t\t\t<li class=\"reset\"><a><span class=\"glyphicon glyphicon-refresh\"></span> Reset</a></li>\n\t\t\t<li class=\"start\"><a><span class=\"glyphicon glyphicon-play\"></span> Start</a></li>\n\t\t\t<li class=\"stop\" style=\"display:none\"><a><span class=\"glyphicon glyphicon-pause\"></span> Pause</a></li>\n\t\t</ul>\n\t\t\n\t\t<div class=\"navbar-header\">\n\t\t\t<button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n\t\t\t\t<span class=\"sr-only\">Toggle navigation</span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t</button>\n\t\t\t<a class=\"navbar-brand active\">uGravity</a>\n\t\t</div>\n\t\t<div class=\"collapse navbar-collapse\">\n\t\t\t<ul class=\"nav navbar-nav\">\n\t\t\t\t<li class=\"dropdown\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Project <b class=\"caret\"></b></a>\n\t\t\t\t\t<ul class=\"dropdown-menu project\">\n\t\t\t\t\t\t<li class=\"new\"><a><span class=\"glyphicon glyphicon-flash\"></span> New Project</a></li>\n\t\t\t\t\t\t<li class=\"save\"><a><span class=\"glyphicon glyphicon-floppy-save\"></span> Save Project</a></li>\n\t\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li class=\"dropdown objects\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Objects <b class=\"caret\"></b></a>\n\t\t\t\t\t<!-- <ul class=\"dropdown-menu objects\"></ul> -->\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n<!-- </div> -->".toString(),
+},{"./editDialog/index":2,"./navigation/index":6,"./saveDialog/index":8,"./timeDialog/index":9,"debounce":12,"ugravity":14}],6:[function(require,module,exports){
+var html = "<!-- <div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\"> -->\n\t<div class=\"container-fluid\">\n\t\t<ul class=\"nav navbar-nav navbar-right\">\n\t\t\t<li class=\"time\"><a><span class=\"glyphicon glyphicon-time\"></span> Time <span class=\"timeScale\">1</span>x</a></li>\n\t\t\t<li class=\"normalize\"><a><span class=\"glyphicon glyphicon-resize-full\"></span> Fit to View</a></li>\n\t\t\t<li class=\"reset\"><a><span class=\"glyphicon glyphicon-refresh\"></span> Reset</a></li>\n\t\t\t<li class=\"start\"><a><span class=\"glyphicon glyphicon-play\"></span> Start</a></li>\n\t\t\t<li class=\"stop\" style=\"display:none\"><a><span class=\"glyphicon glyphicon-pause\"></span> Pause</a></li>\n\t\t</ul>\n\t\t\n\t\t<div class=\"navbar-header\">\n\t\t\t<button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n\t\t\t\t<span class=\"sr-only\">Toggle navigation</span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t</button>\n\t\t\t<a class=\"navbar-brand active\">uGravity</a>\n\t\t</div>\n\t\t<div class=\"collapse navbar-collapse\">\n\t\t\t<ul class=\"nav navbar-nav\">\n\t\t\t\t<li class=\"dropdown\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Project <b class=\"caret\"></b></a>\n\t\t\t\t\t<ul class=\"dropdown-menu project\">\n\t\t\t\t\t\t<li class=\"new\"><a><span class=\"glyphicon glyphicon-flash\"></span> New Project</a></li>\n\t\t\t\t\t\t<li class=\"save\"><a><span class=\"glyphicon glyphicon-floppy-save\"></span> Save Project</a></li>\n\t\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li class=\"dropdown objects\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Objects <b class=\"caret\"></b></a>\n\t\t\t\t\t<!-- <ul class=\"dropdown-menu objects\"></ul> -->\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n<!-- </div> -->".toString(),
+	extend = require("../extend"),
 	ObjectDropdown = require("./objectDropdown/index"),
 	div;
 
 module.exports = function(window, document) {
 	
-	return {
+	extend(this, require("../eventEmitter.js"));
+	
+	console.log(this);
 
-		navButtons: [
-			"normalize",
-			"start",
-			"stop",
-			"reset",
-			"save",
-			"new"
-		],
+	this.navButtons = ["normalize", "time", "start", "stop", "reset", "save", "new"];
+	
+	this.navClick = function(i) {
+
+		// Lets toggle Start/Pause button
+		if(i == "stop") {
+			div.querySelector(".nav li.start").style.display = "block";
+			div.querySelector(".nav li.stop").style.display = "none";
+		} else if(i == "start") {
+			div.querySelector(".nav li.start").style.display = "none";
+			div.querySelector(".nav li.stop").style.display = "block";
+		}
+
+		// Lets track these things
+		if(i == "new" || i == "save") {
+			try { _paq.push(['trackPageView', 'project/'+i]); } catch(e) {}							
+		} else {
+			try { _paq.push(['trackPageView', 'nav/'+i]); } catch(e) {}	
+		}
 		
-		listeners: {},
-		on: function(msg, func, context) {
-			
-			if(!this.listeners[msg])
-				this.listeners[msg] = [];
-				
-			this.listeners[msg].push({func: func, context: context});
-			
-		},
-		trigger: function(msg) {
-			
-			console.log(msg, this.listeners);
-			
-			if(this.listeners[msg]) {
-				for(var i in this.listeners[msg]) {
-					var func 	= this.listeners[msg][i].func,
-						context	= this.listeners[msg][i].context;
-					
-					func.apply((context ? context : this), [].slice.call(arguments, 1));
-				}
+		// Lets trigger all clicks so other interfaces can listen.
+		this.trigger(i);
+	};
+	
+	this.init = function() {
+		
+		/**
+		*
+		* Lets add this thing to the dom if its not alreayd there
+		*
+		**/
+		if(!div) {
+
+			div_in_dom = document.getElementById("main-nav");
+
+			if(div_in_dom) {
+				div = div_in_dom;
+			} else {
+				div = document.createElement("div");
 			}
+	
+			div.innerHTML = html;
+			div.id = "main-nav";
+			div.className = 'navbar navbar-inverse navbar-fixed-top';
+			div.setAttribute("role", "navigation");	
 			
-		},
+			if(!div_in_dom)
+				document.body.appendChild(div);
+		}
 		
-		add: function() {
-
-			if(!div) {
-
-				div_in_dom = document.getElementById("main-nav");
-
-				if(div_in_dom) {
-					div = div_in_dom;
-				} else {
-					div = document.createElement("div");
-				}
+		/**
+		*
+		* Lets open dropdowns on mouseover
+		*
+		**/
+		this._dropdownMouseover = function(e) { e.currentTarget.className = e.currentTarget.className + " open"; };
+		this._dropdownMouseout = function(e) { e.currentTarget.className = e.currentTarget.className.replace(/ open/g,""); };
+		[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) { d.addEventListener('mouseover', this._dropdownMouseover, false); }.bind(this));
+		[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) { d.addEventListener('mouseout', this._dropdownMouseout, false); }.bind(this));
 		
-				div.innerHTML = html;
-				div.id = "main-nav";
-				div.className = 'navbar navbar-inverse navbar-fixed-top';
-				div.setAttribute("role", "navigation");	
-				
-				if(!div_in_dom)
-					document.body.appendChild(div);
-			}
+		/**
+		*
+		* Lets listen for clicks of the nav
+		*
+		**/
+		this._navListeners = {};
+		this.navButtons.forEach(function(i) {
 			
-			[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) { d.addEventListener('mouseover', this.dropdownMouseover, false); }.bind(this));
-			[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) { d.addEventListener('mouseout', this.dropdownMouseout, false); }.bind(this));
-			
-			
-			this._clickListeners = {};
-			var triggerOnClick = function(i) {
-				
-				this._clickListeners[i] = function(e) {
-					
-					if(i == "stop") {
-						div.querySelector(".nav li.start").style.display = "block";
-						div.querySelector(".nav li.stop").style.display = "none";
-					} else if(i == "start") {
-						div.querySelector(".nav li.start").style.display = "none";
-						div.querySelector(".nav li.stop").style.display = "block";
-					}
-					
-					this.trigger(i);
-					e.stopPropagation();
-				}.bind(this);
-				
-				div.querySelector(".nav li."+i).addEventListener('click', this._clickListeners[i], false);
-				
+			this._navListeners[i] = function(e) {
+				this.navClick(i);
+				e.stopPropagation();
 			}.bind(this);
 			
-			this.navButtons.forEach(triggerOnClick);
+			div.querySelector(".nav li."+i).addEventListener('click', this._navListeners[i], false);
 			
-			this.objectDropdown = new ObjectDropdown(document, div.querySelector(".dropdown.objects"));
-			
-			// @todo we need soem sort of proxy msg
-			this.objectDropdown.on("newobject", function() {
-				
-				// close all dropdowns
-				[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(t) {
-					t.className = t.className.replace(/ open/g,"");;
-				});
-				
-				var arr = [].splice.call(arguments,0);
-				arr.unshift("newobject");
-				this.trigger.apply(this, arr);
-			}.bind(this));
-			
-			this.objectDropdown.on("editobject", function() {
-				
-				// close all dropdowns
-				[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(t) {
-					t.className = t.className.replace(/ open/g,"");;
-				});
-				
-				var arr = [].splice.call(arguments,0);
-				arr.unshift("editobject");
-				this.trigger.apply(this, arr);
-			}.bind(this));
-			
-		},
+		}.bind(this));
 		
-		dropdownMouseover: function(e) {
-			e.currentTarget.className = e.currentTarget.className + " open";
-		},
+		/**
+		*
+		* Lets set up our object dropdown
+		*
+		**/
+		this.objectDropdown = new ObjectDropdown(document, div.querySelector(".dropdown.objects"));
 		
-		dropdownMouseout: function(e) {
-			e.currentTarget.className = e.currentTarget.className.replace(/ open/g,"");
-		},
-		
-		updateObjects: function(objects) {
-			this.objectDropdown.update(objects);
-		},
-		
-		remove: function() {
-			[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) {d.removeEventListener('mouseover', this.dropdownMouseover, false); }.bind(this));
-			[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) {d.removeEventListener('mouseout', this.dropdownMouseout, false); }.bind(this));
-			div.querySelector(".nav li").removeEventListener('click', this._clickListener, false);
+		// @todo we need soem sort of proxy msg
+		this.objectDropdown.on("newobject", function() {
 			
-			document.body.removeChild(div);
-			div = null;
-		}
+			// close all dropdowns
+			[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(t) {
+				t.className = t.className.replace(/ open/g,"");;
+			});
+			
+			var arr = [].splice.call(arguments,0);
+			arr.unshift("newobject");
+			this.trigger.apply(this, arr);
+		}.bind(this));
+		
+		this.objectDropdown.on("editobject", function() {
+			
+			// close all dropdowns
+			[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(t) {
+				t.className = t.className.replace(/ open/g,"");;
+			});
+			
+			var arr = [].splice.call(arguments,0);
+			arr.unshift("editobject");
+			this.trigger.apply(this, arr);
+		}.bind(this));
+		
 	};
+	
+	this.updateTimeScale = function(timeScale) {
+		div.querySelector("span.timeScale").innerHTML = timeScale;
+	};
+	
+	this.remove = function() {
+		[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) {d.removeEventListener('mouseover', this._dropdownMouseover, false); }.bind(this));
+		[].splice.call(div.querySelectorAll("li.dropdown"),0).forEach(function(d) {d.removeEventListener('mouseout', this._dropdownMouseout, false); }.bind(this));
+
+		this.navButtons.forEach(function(i) {
+			div.querySelector(".nav li."+i).removeEventListener('click', this._navListeners[i], false);
+		}.bind(this));
+		
+		document.body.removeChild(div);
+		div = null;
+	}
+	
+	this.init();
+	
+	return this;
 }
-},{"./objectDropdown/index":6}],6:[function(require,module,exports){
+},{"../eventEmitter.js":3,"../extend":4,"./objectDropdown/index":7}],7:[function(require,module,exports){
+var extend = require("../../extend");
+
 module.exports = function(document, element) {
+
+	extend(this, require("../../eventEmitter.js"));
 
 	var dropdown_ul = document.createElement("ul");
 	dropdown_ul.className = "dropdown-menu objects";
 	element.appendChild(dropdown_ul);
 	
-	return {
-		listeners: {},
-		on: function(msg, func, context) {
-			
-			if(!this.listeners[msg])
-				this.listeners[msg] = [];
-				
-			this.listeners[msg].push({func: func, context: context});
-			
-		},
-		trigger: function(msg) {
-			
-			if(this.listeners[msg]) {
-				for(var i in this.listeners[msg]) {
-					var func 	= this.listeners[msg][i].func,
-						context	= this.listeners[msg][i].context;
-					
-					func.apply((context ? context : this), [].slice.call(arguments, 1));
-				}
+	this.update = function(objects) {
+		var html = [], j = 0;
+
+		if(objects && objects.length > 0) {
+
+			for(var i in objects) {
+				html[j++] = "<li class='object' data-objectid='"+objects[i].id+"'><a><span style='background-color:"+objects[i].color+";'></span>" + objects[i].name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + "</a></li>"
 			}
+
+			html[j++] = '<li class="divider"></li><li class="add"><a>Add Another Object</a></li>';
 			
-		},
-		
-		
-		update: function(objects) {
-			var html = [], j = 0;
-	
-			if(!objects || objects.length) {
-	
-				for(var i in objects) {
-					html[j++] = "<li class='object' data-objectid='"+objects[i].id+"'><a><span style='background-color:"+objects[i].color+";'></span>" + objects[i].name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + "</a></li>"
-				}
-	
-				html[j++] = '<li class="divider"></li><li class="add"><a>Add Another Object</a></li>';
-				
-			} else {
-				
-				html[j++] = '<li class="add"><a>Add Object</a></li>';
-			}
-	
-			// Lets remove any existing listeners.
-			try { dropdown_ul.querySelector("li.add").removeEventListener("click", this._addListener, false); } catch(e) {}
-			try { [].splice.call(dropdown_ul.querySelectorAll("li.object"),0).forEach(function(d) { d.removeEventListener("click", this._editListener, false); }); } catch(e) {}
-	
-			dropdown_ul.innerHTML = html.join("");
+		} else {
 			
-			this._addListener = function() { this.trigger("newobject") }.bind(this);
-			dropdown_ul.querySelector("li.add").addEventListener("click", this._addListener, false);
-			
-			this._editListener = function(e) { this.trigger("editobject", e.currentTarget.getAttribute("data-objectid")); }.bind(this);
-			[].splice.call(dropdown_ul.querySelectorAll("li.object"),0).forEach(function(d) { d.addEventListener("click", this._editListener, false); }.bind(this));
-			
+			html[j++] = '<li class="add"><a>Add Object</a></li>';
 		}
+
+		// Lets remove any existing listeners.
+		try { dropdown_ul.querySelector("li.add").removeEventListener("click", this._addListener, false); } catch(e) {}
+		try { [].splice.call(dropdown_ul.querySelectorAll("li.object"),0).forEach(function(d) { d.removeEventListener("click", this._editListener, false); }); } catch(e) {}
+
+		dropdown_ul.innerHTML = html.join("");
+		
+		this._addListener = function() { 
+			try { _paq.push(['trackPageView', 'object/new']); } catch(e) {}
+			this.trigger("newobject") 
+		}.bind(this);
+		
+		dropdown_ul.querySelector("li.add").addEventListener("click", this._addListener, false);
+		
+		this._editListener = function(e) { 
+			try { _paq.push(['trackPageView', 'object/edit']); } catch(e) {}
+			this.trigger("editobject", e.currentTarget.getAttribute("data-objectid")); 
+		}.bind(this);
+		[].splice.call(dropdown_ul.querySelectorAll("li.object"),0).forEach(function(d) { d.addEventListener("click", this._editListener, false); }.bind(this));
+		
 	}
-}
-},{}],7:[function(require,module,exports){
-var html = "<div class=\"panel-heading\">Objects</div>\n<div class=\"list-group\"></div>",
-	div;
-
-module.exports = function(window, document) {
 	
-	// var $ 		 = window.$,
-	// 	document = window.document,
-	// 	element  = $(html);
-		
-	//$(document.body).append(element);
-	
-	return {
-		add: function() {
-			
-			if(!div) {
-
-				div_in_dom = document.getElementById("main-list");
-
-				if(div_in_dom) {
-					div = div_in_dom;
-				} else {
-					div = document.createElement("div");
-				}
-		
-				div.innerHTML = html;
-				div.id = "main-list";
-				div.className = 'panel panel-primary';
-				div.setAttribute("role", "list");	
-				
-				if(!div_in_dom)
-					document.body.appendChild(div);
-			}
-			
-		},
-		remove: function() {
-			div.remove();
-		}
-	}	
+	return this;
 }
-},{}],8:[function(require,module,exports){
+},{"../../eventEmitter.js":3,"../../extend":4}],8:[function(require,module,exports){
 var html = "<!-- <div id=\"saveModal\" class=\"modal fade in\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"saveModal\" aria-hidden=\"false\" style=\"display: block;\"> -->\n\t<div class=\"modal-dialog\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n\t\t\t\t<!-- <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button> -->\n\t\t\t\t<h4 class=\"modal-title\">Save Project</h4>\n\t\t\t</div>\n\t\t\t<div class=\"modal-body\">\n\t\t\t\t<p>Link to, save or share your current project using the unique permalink below. In addition, you can save this project to your web favorites by pressing CTRL-D (COMMAND-D on a Mac) now.</p>\n\n\t\t\t\t<p><a href=\"{link}\" target=\"_blank\" style=\"word-wrap: break-word;\">{link}</a></p>\n\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Return to Project</button>\n\t\t\t</div>\n\t\t</div><!-- /.modal-content -->\n\t</div><!-- /.modal-dialog -->\n<!-- </div> -->".toString();
 
 module.exports = function(window,document, router) {
 	
 	var div = document.createElement("div");
 	var backdrop = document.createElement("div");
-	
-	
-	var api = {
-		open: function(settings) {
-			
-			div.innerHTML = html.replace(/{link}/g, window.location.protocol+"//"+window.location.host+"/project/"+encodeURI(JSON.stringify(settings)));
-			
-			this._modalContentListener = function(e) {
-				if(e.toElement.getAttribute("data-dismiss")) {
-					this.close();
-				} else {
-					e.stopPropagation();
-					//e.preventDefault();	
-				}
-			}.bind(this);
-			div.querySelector(".modal-content").addEventListener("click", this._modalContentListener, false);
-
-			
-			this._closeListener = function() { this.close(); }.bind(this);			
-			div.addEventListener("click", this._closeListener, false);
-			
-			document.body.appendChild(backdrop);
-			document.body.appendChild(div);
-			
-			router.update("/project/"+encodeURI(JSON.stringify(settings)), {replace: true});
-			
-		},
-		
-		close: function() {
-			router.update("", {replace: true});
-			
-			div.querySelector(".modal-content").removeEventListener("click", this._modalContentListener, false);
-			div.removeEventListener("click", this._closeListener, false);
-			div.querySelector("button").removeEventListener("click", this._modalContentListener, false);
-			
-			document.body.removeChild(backdrop);
-			document.body.removeChild(div);
-		}
-	};
-	
 
 	div.id = "saveModal";
 	div.className = "modal fade In";
@@ -781,11 +656,93 @@ module.exports = function(window,document, router) {
 	
 
 	backdrop.className = "modal-backdrop fade in";
+
+	this.open = function(settings) {
+		
+		div.innerHTML = html.replace(/{link}/g, window.location.protocol+"//"+window.location.host+"/project/"+encodeURI(JSON.stringify(settings)));
+		
+		this._modalContentListener = function(e) {
+			if(e.toElement.getAttribute("data-dismiss")) {
+				this.close();
+			} else {
+				e.stopPropagation();
+				//e.preventDefault();	
+			}
+		}.bind(this);
+		div.querySelector(".modal-content").addEventListener("click", this._modalContentListener, false);
+
+		
+		this._closeListener = function() { this.close(); }.bind(this);			
+		div.addEventListener("click", this._closeListener, false);
+		
+		document.body.appendChild(backdrop);
+		document.body.appendChild(div);
+		
+		router.update("/project/"+encodeURI(JSON.stringify(settings)), {replace: true});
+		
+	}
+		
+	this.close =function() {
+		router.update("", {replace: true});
+		
+		div.querySelector(".modal-content").removeEventListener("click", this._modalContentListener, false);
+		div.removeEventListener("click", this._closeListener, false);
+		div.querySelector("button").removeEventListener("click", this._modalContentListener, false);
+		
+		document.body.removeChild(backdrop);
+		document.body.removeChild(div);
+	}
 	
-	return api;
+	return this;
 	
 }
 },{}],9:[function(require,module,exports){
+var html = "<!-- <div id=\"saveModal\" class=\"modal fade in\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"saveModal\" aria-hidden=\"false\" style=\"display: block;\"> -->\n\t<div class=\"modal-dialog\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n\t\t\t\t<h4 class=\"modal-title\">Time Scale</h4>\n\t\t\t</div>\n\t\t\t<div class=\"modal-body\">\n\t\t\t\t<p><input type=\"number\" name=\"time\" min=\"1\" step=\"1\" style=\"width:80px;\" autofocus> <strong>x</strong></p>\n\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-default btn-primary\" data-dismiss=\"modal\">OK</button>\n\t\t\t</div>\n\t\t</div><!-- /.modal-content -->\n\t</div><!-- /.modal-dialog -->\n<!-- </div> -->".toString();
+
+module.exports = function(window,document, router) {
+	
+	var div = document.createElement("div");
+	var backdrop = document.createElement("div");
+
+	div.id = "timeModal";
+	div.className = "modal fade In";
+	div.setAttribute("tabindex", -1);
+	div.setAttribute("role", "dialog");
+	div.setAttribute("aria-labelledby", "saveModal");
+	div.setAttribute("aria-hidden", "false");
+	div.style.display = "block";
+
+	backdrop.className = "modal-backdrop fade in";
+	
+	div.innerHTML = html;
+	
+	this.open = function(timeScale, callback) {
+		
+		console.log(arguments);
+
+		div.querySelector("input").value = timeScale;
+
+		this._modalContentListener = function(e) {
+			callback(Number(div.querySelector("input").value));
+			this.close();
+		}.bind(this);
+		div.querySelector("button").addEventListener("click", this._modalContentListener, false);
+		
+		document.body.appendChild(backdrop);
+		document.body.appendChild(div);
+
+	}
+		
+	this.close = function() {
+		div.querySelector("button").removeEventListener("click", this._modalContentListener, false);
+		document.body.removeChild(backdrop);
+		document.body.removeChild(div);
+	}
+	
+	return this;
+	
+}
+},{}],10:[function(require,module,exports){
 var LocationBar = require('location-bar'),
 	router = new LocationBar,
 	routes = require("./routes");
@@ -798,13 +755,15 @@ module.exports = function(window, document) {
 		// This handles pushState stuff
 		router.route(route.regex, function () {
 			// only called when the current url matches the regex
-			route.app.apply(this, [window, document, router, function(){} ]);
+			//route.app.apply(this, [window, document, router, function(){} ]);
+			new route.app(window, document, router, function() {});
 		});
 
 		// API for nodejs
 		routes[i].exec = function(onLoad) {
 			router.update(route.path, {trigger: false});
-			route.app.apply(this, [window, document, router, onLoad]);
+			//route.app.apply(this, [window, document, router, onLoad]);
+			new route.app(window, document, router, onLoad);
 		}				
 		
 	});
@@ -817,7 +776,7 @@ if(typeof window != "undefined") {
 	module.exports(window,document);
 	router.start({pushState: true});
 }
-},{"./routes":10,"location-bar":12}],10:[function(require,module,exports){
+},{"./routes":11,"location-bar":13}],11:[function(require,module,exports){
 module.exports = [
 	{
 		path: "",
@@ -838,7 +797,7 @@ module.exports = [
 		app: require("./about.js")
 	}
 ];
-},{"./about.js":1,"./main/index.js":4}],11:[function(require,module,exports){
+},{"./about.js":1,"./main/index.js":5}],12:[function(require,module,exports){
 /**
  * Debounces a function by the given threshold.
  *
@@ -872,7 +831,7 @@ module.exports = function debounce(func, threshold, execAsap){
   };
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 // LocationBar module extracted from Backbone.js 1.0.0
 // (actually it's commit f6fa0cb87e26bb3d1b7f47144fd720d1ab48e88f)
 //
@@ -1206,7 +1165,7 @@ define(function() {
   return LocationBar;
 });
 })(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); });
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 !function (name, definition) {
 	// based on https://github.com/ded/domready for best support
 	if (typeof module != 'undefined') module.exports = definition()
@@ -1935,5 +1894,5 @@ define(function() {
 	return uGravity;
 
 });
-},{}]},{},[9])
+},{}]},{},[10])
 ;

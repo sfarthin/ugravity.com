@@ -6040,6 +6040,9 @@ li.dropdown > a:first-child {
   top: 11px;
   right: -6px;
 }
+#timeModal .modal-body p {
+  text-align: center;
+}
 body a {
   cursor: pointer;
 }

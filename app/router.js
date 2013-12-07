@@ -10,13 +10,15 @@ module.exports = function(window, document) {
 		// This handles pushState stuff
 		router.route(route.regex, function () {
 			// only called when the current url matches the regex
-			route.app.apply(this, [window, document, router, function(){} ]);
+			//route.app.apply(this, [window, document, router, function(){} ]);
+			new route.app(window, document, router, function() {});
 		});
 
 		// API for nodejs
 		routes[i].exec = function(onLoad) {
 			router.update(route.path, {trigger: false});
-			route.app.apply(this, [window, document, router, onLoad]);
+			//route.app.apply(this, [window, document, router, onLoad]);
+			new route.app(window, document, router, onLoad);
 		}				
 		
 	});
