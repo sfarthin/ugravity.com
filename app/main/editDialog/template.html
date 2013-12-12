@@ -11,8 +11,9 @@
 					<div class="form-group">
 						<label for="name" class="col-sm-5 control-label">Presets</label>
 						<div class="col-sm-7">
-							<button class="btn remove btn-default" data-preset="earth">Earth</button>
 							<button class="btn remove btn-default" data-preset="sun">Sun</button>
+							<button class="btn remove btn-default" data-preset="jupiter">Jupiter</button>
+							<button class="btn remove btn-default" data-preset="earth">Earth</button>
 							<button class="btn remove btn-default" data-preset="moon">Moon</button>
 						</div>
 					</div>
@@ -42,9 +43,9 @@
 					</div>
 
 					<div class="form-group">
-						<label for="mass" class="col-sm-5 control-label">Mass (kg)</label>
+						<label for="earth_mass" class="col-sm-5 control-label">Mass (Earth masses)</label>
 						<div class="col-sm-7">
-							<input type="text" class="form-control" name="mass" placeholder="(i.e. 2.0255e+25)">
+							<input type="text" class="form-control" name="earth_mass">
 						</div>
 					</div>
 					
@@ -79,22 +80,22 @@
 								<!-- <input type="text" class="form-control" name="direction" placeholder="(i.e. 45)"> -->
 							</div>
 						</div>
-					</div>
 					
-					<div class="page-header"><h5>Velocity</h5></div>
-					  <div class="form-group">
-					    <label for="velocity" class="col-sm-5 control-label">Velocity (AU/second)</label>
-						<div class="col-sm-7">
-							<input type="text" class="form-control" name="velocity" placeholder="(i.e. 0.000006 to stay in orbit)">
+						<div class="page-header"><h5>Velocity relative to another object</h5></div>
+						<div class="form-group">
+							<label for="velocity_in_km" class="col-sm-5 control-label">Velocity (km/s)</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" name="velocity_in_km">
+							</div>
 						</div>
-					  </div>
-					  <div class="form-group">
-					    <label for="velocity_direction" class="col-sm-5 control-label">Velocity direction (degrees)<span class="glyphicon glyphicon-circle-arrow-up velocity_direction"></span></label>
-						<div class="col-sm-7">
-							<input type="number" class="form-control" min="0" max="360" step="5" value="0" name="velocity_direction">
-							<!-- <input type="text" class="form-control" name="velocity_direction" placeholder="(i.e. 45)"> -->
+						<div class="form-group">
+							<label for="velocity_direction" class="col-sm-5 control-label">Velocity direction (degrees)<span class="glyphicon glyphicon-circle-arrow-up velocity_direction"></span></label>
+							<div class="col-sm-7">
+								<input type="number" class="form-control" min="0" max="360" step="5" value="0" name="velocity_direction">
+								<!-- <input type="text" class="form-control" name="velocity_direction" placeholder="(i.e. 45)"> -->
+							</div>
 						</div>
-					  </div>
+					</div>
 				  </div>
 			</div>
 			<div class="modal-footer">

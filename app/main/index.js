@@ -1,6 +1,6 @@
 // Libraries
 var debounce 	= require("debounce"),
-	uGravity 	= require("ugravity");
+	uGravity 	= require("ugravity"); //require("../../../gravity/uGravity.js");
 
 // interfaces
 var Navigation	= require("./navigation/index"),
@@ -105,7 +105,7 @@ module.exports = function(window, document, router, onLoad) {
 	this.newObject = function() {
 		editDialog.open(this._settings, null, function(object) {
 			if(!this._settings.objects) this._settings.objects = [];
-			this._settings.objects.push(object);
+			if(object) this._settings.objects.push(object);
 			this.changeSettings(this._settings);
 		}.bind(this));
 	}
@@ -114,13 +114,15 @@ module.exports = function(window, document, router, onLoad) {
 		// Lets find the object
 		var editObject = this._settings.objects.filter(function(o) { return o.id == objectid; })[0];
 
-		// lets remove it from the settings...
-		this._settings.objects = this._settings.objects.filter(function(object) { return editObject != object; });
-		this.changeSettings(this._settings);
-
 		// Lets open the dialog
 		editDialog.open(this._settings, editObject, function(object) {
-			this._settings.objects.push(object);
+			
+			// lets remove it from the settings...
+			this._settings.objects = this._settings.objects.filter(function(object) { return editObject != object; });
+			
+			// add it fresh.
+			if(object) this._settings.objects.push(object);
+
 			this.changeSettings(this._settings);			
 		}.bind(this));
 	}

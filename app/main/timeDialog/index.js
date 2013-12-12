@@ -17,12 +17,16 @@ module.exports = function(window,document, router) {
 	
 	div.innerHTML = html;
 	
+	
+	var seconds_in_a_day = 86400;
+	
 	this.open = function(timeScale, callback) {
 
-		div.querySelector("input").value = timeScale;
+		div.querySelector("input").value = timeScale/seconds_in_a_day;
 
 		this._modalContentListener = function(e) {
-			callback(Number(div.querySelector("input").value));
+			
+			callback(Number(div.querySelector("input").value)*seconds_in_a_day);
 			this.close();
 		}.bind(this);
 		div.querySelector("button").addEventListener("click", this._modalContentListener, false);

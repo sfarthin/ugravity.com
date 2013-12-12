@@ -44,7 +44,7 @@ module.exports = function(window, document, router) {
 		
 		// If we are editing an object that already exists, lets set the form fields.
 		if(editObject) {
-			var fields = ["name", "color", "mass", "radius_in_km", "relative_object", "relative_object_distance", "relative_object_direction", "velocity", "velocity_direction"];
+			var fields = ["name", "color", "earth_mass", "radius_in_km", "relative_object", "relative_object_distance", "relative_object_direction", "velocity_in_km", "velocity_direction"];
 			
 			fields.forEach(function(field) {
 				set(field, editObject[field]);
@@ -65,6 +65,9 @@ module.exports = function(window, document, router) {
 					try { _paq.push(['trackPageView', 'object/save']); } catch(e) {}
 
 					var x, y,
+						km_in_au = 1.496e+8,
+						kg_in_earthm = 5.9721986e24,
+						
 						relative_object_id = get_value("relative_object"),
 						distance  		  = Number(get_value("relative_object_distance")),
 						direction_radians = Number(get_value("relative_object_direction")) * Math.PI / 180,
@@ -83,33 +86,37 @@ module.exports = function(window, document, router) {
 					}
 						
 					var velocity_direction_radians = Number(get_value("velocity_direction")) * Math.PI / 180,
-						velocity 				   = Number(get_value("velocity"));
+						velocity 				   = Number(get_value("velocity_in_km"))/km_in_au, // convert to AU
+						relative_object_velocityX = 0, 
+						relative_object_velocityY = 0;
 						
 					var updatedObject = {
 						// Essiential
 						id: 		(editObject && editObject.id ? editObject.id : new Date().getTime()+"-"+Math.round((Math.random()*100))),
 						"name": 	get_value("name"),
 						"color": 	get_value("color"),
-						"mass": 	Number(get_value("mass").replace(/,/g, "")),
-						"radius": 	Number(get_value("radius_in_km").replace(/,/g, ""))/(1.496e+8), // convert kilometers to AU
+						"mass": 	Number(get_value("earth_mass").replace(/,/g, ""))*kg_in_earthm, // Convert earth masses to kg
+						"radius": 	Number(get_value("radius_in_km").replace(/,/g, ""))/km_in_au,
 						"y": 		Number(y),
 						"x": 		Number(x),
-						"velocityX": (Math.sin(velocity_direction_radians)*velocity),
-						"velocityY": (Math.cos(velocity_direction_radians)*velocity),
+						"velocityX": (Math.sin(velocity_direction_radians)*velocity) + (relative_object ? relative_object.velocityX : 0), //+ relative_object_velocityX,
+						"velocityY": (Math.cos(velocity_direction_radians)*velocity)*-1 + (relative_object ? relative_object.velocityY : 0), //+ relative_object_velocityY,
 						
 						// Additional for uGravity.com.. we can keep these as text so we can use equations.
-						"radius_in_km":    get_value("radius_in_km"),
-						"relative_object": get_value("relative_object"),
-						"relative_object_distance": get_value("relative_object_distance"),
-						"relative_object_direction":get_value("relative_object_direction"),
-						"velocity": get_value("velocity"),
-						"velocity_direction": get_value("velocity_direction"),
+						"earth_mass": 					get_value("earth_mass"),
+						"radius_in_km":    				get_value("radius_in_km"),
+						"relative_object": 				get_value("relative_object"),
+						"relative_object_distance": 	get_value("relative_object_distance"),
+						"relative_object_direction": 	get_value("relative_object_direction"),
+						"velocity_in_km": 				get_value("velocity_in_km"),
+						"velocity_direction": 			get_value("velocity_direction"),
 					};
 					
 					callback(updatedObject);
 				} else if(e.toElement.className.match("remove")) {
 					
 					try { _paq.push(['trackPageView', 'object/remove']); } catch(e) {}
+					callback();
 					
 				}
 				this.close();
@@ -124,16 +131,32 @@ module.exports = function(window, document, router) {
 					try { _paq.push(['trackPageView', 'preset/earth']); } catch(e) {}
 					
 					set("name", "Earth");
-					set("mass", 5.9721986e+24);
+					set("earth_mass", 1);
 					set("radius_in_km", 6371);
-					set("relative_object_distance", 1);
-					set("velocity_direction", 90);
 					
 					// Earth moves at 67000 miles/hr
 					// 92955807.3 miles in one AU
-					set("velocity", 67000/ 92955807.3 / 60 / 60);
+					//set("velocity", 67000/ 92955807.3 / 60 / 60);
 					
-				}
+				} else if(preset == "sun") {
+					
+					set("name", "Sun");
+					set("earth_mass", 333000);
+					set("radius_in_km", 6.96342e5);
+					
+				} else if(preset == "moon") {
+					
+					set("name", "Moon");
+					set("earth_mass", 0.0123);
+					set("radius_in_km", 1737.5);
+					
+				} else if(preset == "jupiter") {
+	
+   					set("name", "Jupiter");
+   					set("earth_mass", 317.94);
+   					set("radius_in_km", 69174);
+	
+   				}
 				
 				this._velocityDirectionListener();
 				this._directionListener();

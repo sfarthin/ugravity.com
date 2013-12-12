@@ -6,7 +6,7 @@ module.exports = function(window, document, router, onLoad) {
 	
 }
 },{}],2:[function(require,module,exports){
-var html 	= "<!-- <div name=\"newModal\" class=\"modal fade in\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"newModal\" aria-hidden=\"false\" style=\"display: block;\"> -->\n\t<div class=\"modal-dialog\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n\t\t\t\t<!-- <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button> -->\n\t\t\t\t<h4 class=\"modal-title\">Object Properties</h4>\n\t\t\t</div>\n\t\t\t<div class=\"modal-body\">\n\t\t\t\t<div class=\"form-horizontal\" role=\"form\">\n\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Presets</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"earth\">Earth</button>\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"sun\">Sun</button>\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"moon\">Moon</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t<!-- General -->\n\t\t\t\t\t<div class=\"page-header\"><h5>General</h5></div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"name\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Color</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<select class=\"form-control\" name=\"color\">\n\t\t\t\t\t\t\t\t<option value=\"#FF0000\">Red</option>\n\t\t\t\t\t\t\t\t<option value=\"#00FF00\">Green</option>\n\t\t\t\t\t\t\t\t<option value=\"#0000FF\">Blue</option>\n\t\t\t\t\t\t\t\t<option value=\"#FFFF00\">Yellow</option>\n\t\t\t\t\t\t\t\t<option value=\"#660099\">Purple</option>\n\t\t\t\t\t\t\t\t<option value=\"#CC3300\">Orange</option>\n\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"mass\" class=\"col-sm-5 control-label\">Mass (kg)</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"mass\" placeholder=\"(i.e. 2.0255e+25)\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"radius_in_km\" class=\"col-sm-5 control-label\">Radius (km)</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"radius_in_km\" placeholder=\"(e.g., the Earth's radius is 6,371 km)\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<!-- Position -->\n\t\t\t\t\t<div class=\"position_group\">\n\t\t\t\t\t\t<div class=\"page-header\"><h5>Position relative to another object</h5></div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object\" class=\"col-sm-5 control-label\">Object</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<select class=\"form-control\" name=\"relative_object\">\n\t\t\t\t\t\t\t\t{objects}\n\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object_distance\" class=\"col-sm-5 control-label\">Distance (AU)</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"relative_object_distance\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object_direction\" class=\"col-sm-5 control-label\">Direction (degrees)<span class=\"glyphicon glyphicon-circle-arrow-up direction\"></span></label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" min=\"0\" max=\"360\" step=\"5\" value=\"0\" name=\"relative_object_direction\">\n\t\t\t\t\t\t\t\t<!-- <input type=\"text\" class=\"form-control\" name=\"direction\" placeholder=\"(i.e. 45)\"> -->\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<div class=\"page-header\"><h5>Velocity</h5></div>\n\t\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t\t    <label for=\"velocity\" class=\"col-sm-5 control-label\">Velocity (AU/second)</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"velocity\" placeholder=\"(i.e. 0.000006 to stay in orbit)\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t  </div>\n\t\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t\t    <label for=\"velocity_direction\" class=\"col-sm-5 control-label\">Velocity direction (degrees)<span class=\"glyphicon glyphicon-circle-arrow-up velocity_direction\"></span></label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" min=\"0\" max=\"360\" step=\"5\" value=\"0\" name=\"velocity_direction\">\n\t\t\t\t\t\t\t<!-- <input type=\"text\" class=\"form-control\" name=\"velocity_direction\" placeholder=\"(i.e. 45)\"> -->\n\t\t\t\t\t\t</div>\n\t\t\t\t\t  </div>\n\t\t\t\t  </div>\n\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n\t\t\t\t<button type=\"button\" class=\"btn remove btn-default\" data-dismiss=\"modal\">Remove Object</button>\n\t\t\t\t<button type=\"button\" class=\"btn save btn-primary\" data-dismiss=\"modal\">Save Object</button>\n\t\t\t</div>\n\t\t</div><!-- /.modal-content -->\n\t</div><!-- /.modal-dialog -->\n<!-- </div> -->".toString(),
+var html 	= "<!-- <div name=\"newModal\" class=\"modal fade in\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"newModal\" aria-hidden=\"false\" style=\"display: block;\"> -->\n\t<div class=\"modal-dialog\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n\t\t\t\t<!-- <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button> -->\n\t\t\t\t<h4 class=\"modal-title\">Object Properties</h4>\n\t\t\t</div>\n\t\t\t<div class=\"modal-body\">\n\t\t\t\t<div class=\"form-horizontal\" role=\"form\">\n\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Presets</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"sun\">Sun</button>\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"jupiter\">Jupiter</button>\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"earth\">Earth</button>\n\t\t\t\t\t\t\t<button class=\"btn remove btn-default\" data-preset=\"moon\">Moon</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t<!-- General -->\n\t\t\t\t\t<div class=\"page-header\"><h5>General</h5></div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"name\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"name\" class=\"col-sm-5 control-label\">Color</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<select class=\"form-control\" name=\"color\">\n\t\t\t\t\t\t\t\t<option value=\"#FF0000\">Red</option>\n\t\t\t\t\t\t\t\t<option value=\"#00FF00\">Green</option>\n\t\t\t\t\t\t\t\t<option value=\"#0000FF\">Blue</option>\n\t\t\t\t\t\t\t\t<option value=\"#FFFF00\">Yellow</option>\n\t\t\t\t\t\t\t\t<option value=\"#660099\">Purple</option>\n\t\t\t\t\t\t\t\t<option value=\"#CC3300\">Orange</option>\n\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"earth_mass\" class=\"col-sm-5 control-label\">Mass (Earth masses)</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"earth_mass\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<label for=\"radius_in_km\" class=\"col-sm-5 control-label\">Radius (km)</label>\n\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"radius_in_km\" placeholder=\"(e.g., the Earth's radius is 6,371 km)\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<!-- Position -->\n\t\t\t\t\t<div class=\"position_group\">\n\t\t\t\t\t\t<div class=\"page-header\"><h5>Position relative to another object</h5></div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object\" class=\"col-sm-5 control-label\">Object</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<select class=\"form-control\" name=\"relative_object\">\n\t\t\t\t\t\t\t\t{objects}\n\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object_distance\" class=\"col-sm-5 control-label\">Distance (AU)</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"relative_object_distance\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"relative_object_direction\" class=\"col-sm-5 control-label\">Direction (degrees)<span class=\"glyphicon glyphicon-circle-arrow-up direction\"></span></label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" min=\"0\" max=\"360\" step=\"5\" value=\"0\" name=\"relative_object_direction\">\n\t\t\t\t\t\t\t\t<!-- <input type=\"text\" class=\"form-control\" name=\"direction\" placeholder=\"(i.e. 45)\"> -->\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t\t<div class=\"page-header\"><h5>Velocity relative to another object</h5></div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"velocity_in_km\" class=\"col-sm-5 control-label\">Velocity (km/s)</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"velocity_in_km\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t<label for=\"velocity_direction\" class=\"col-sm-5 control-label\">Velocity direction (degrees)<span class=\"glyphicon glyphicon-circle-arrow-up velocity_direction\"></span></label>\n\t\t\t\t\t\t\t<div class=\"col-sm-7\">\n\t\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" min=\"0\" max=\"360\" step=\"5\" value=\"0\" name=\"velocity_direction\">\n\t\t\t\t\t\t\t\t<!-- <input type=\"text\" class=\"form-control\" name=\"velocity_direction\" placeholder=\"(i.e. 45)\"> -->\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t  </div>\n\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n\t\t\t\t<button type=\"button\" class=\"btn remove btn-default\" data-dismiss=\"modal\">Remove Object</button>\n\t\t\t\t<button type=\"button\" class=\"btn save btn-primary\" data-dismiss=\"modal\">Save Object</button>\n\t\t\t</div>\n\t\t</div><!-- /.modal-content -->\n\t</div><!-- /.modal-dialog -->\n<!-- </div> -->".toString(),
 	extend 	= require("../extend");
 
 module.exports = function(window, document, router) {
@@ -52,7 +52,7 @@ module.exports = function(window, document, router) {
 		
 		// If we are editing an object that already exists, lets set the form fields.
 		if(editObject) {
-			var fields = ["name", "color", "mass", "radius_in_km", "relative_object", "relative_object_distance", "relative_object_direction", "velocity", "velocity_direction"];
+			var fields = ["name", "color", "earth_mass", "radius_in_km", "relative_object", "relative_object_distance", "relative_object_direction", "velocity_in_km", "velocity_direction"];
 			
 			fields.forEach(function(field) {
 				set(field, editObject[field]);
@@ -73,6 +73,9 @@ module.exports = function(window, document, router) {
 					try { _paq.push(['trackPageView', 'object/save']); } catch(e) {}
 
 					var x, y,
+						km_in_au = 1.496e+8,
+						kg_in_earthm = 5.9721986e24,
+						
 						relative_object_id = get_value("relative_object"),
 						distance  		  = Number(get_value("relative_object_distance")),
 						direction_radians = Number(get_value("relative_object_direction")) * Math.PI / 180,
@@ -91,33 +94,37 @@ module.exports = function(window, document, router) {
 					}
 						
 					var velocity_direction_radians = Number(get_value("velocity_direction")) * Math.PI / 180,
-						velocity 				   = Number(get_value("velocity"));
+						velocity 				   = Number(get_value("velocity_in_km"))/km_in_au, // convert to AU
+						relative_object_velocityX = 0, 
+						relative_object_velocityY = 0;
 						
 					var updatedObject = {
 						// Essiential
 						id: 		(editObject && editObject.id ? editObject.id : new Date().getTime()+"-"+Math.round((Math.random()*100))),
 						"name": 	get_value("name"),
 						"color": 	get_value("color"),
-						"mass": 	Number(get_value("mass").replace(/,/g, "")),
-						"radius": 	Number(get_value("radius_in_km").replace(/,/g, ""))/(1.496e+8), // convert kilometers to AU
+						"mass": 	Number(get_value("earth_mass").replace(/,/g, ""))*kg_in_earthm, // Convert earth masses to kg
+						"radius": 	Number(get_value("radius_in_km").replace(/,/g, ""))/km_in_au,
 						"y": 		Number(y),
 						"x": 		Number(x),
-						"velocityX": (Math.sin(velocity_direction_radians)*velocity),
-						"velocityY": (Math.cos(velocity_direction_radians)*velocity),
+						"velocityX": (Math.sin(velocity_direction_radians)*velocity) + (relative_object ? relative_object.velocityX : 0), //+ relative_object_velocityX,
+						"velocityY": (Math.cos(velocity_direction_radians)*velocity)*-1 + (relative_object ? relative_object.velocityY : 0), //+ relative_object_velocityY,
 						
 						// Additional for uGravity.com.. we can keep these as text so we can use equations.
-						"radius_in_km":    get_value("radius_in_km"),
-						"relative_object": get_value("relative_object"),
-						"relative_object_distance": get_value("relative_object_distance"),
-						"relative_object_direction":get_value("relative_object_direction"),
-						"velocity": get_value("velocity"),
-						"velocity_direction": get_value("velocity_direction"),
+						"earth_mass": 					get_value("earth_mass"),
+						"radius_in_km":    				get_value("radius_in_km"),
+						"relative_object": 				get_value("relative_object"),
+						"relative_object_distance": 	get_value("relative_object_distance"),
+						"relative_object_direction": 	get_value("relative_object_direction"),
+						"velocity_in_km": 				get_value("velocity_in_km"),
+						"velocity_direction": 			get_value("velocity_direction"),
 					};
 					
 					callback(updatedObject);
 				} else if(e.toElement.className.match("remove")) {
 					
 					try { _paq.push(['trackPageView', 'object/remove']); } catch(e) {}
+					callback();
 					
 				}
 				this.close();
@@ -132,16 +139,32 @@ module.exports = function(window, document, router) {
 					try { _paq.push(['trackPageView', 'preset/earth']); } catch(e) {}
 					
 					set("name", "Earth");
-					set("mass", 5.9721986e+24);
+					set("earth_mass", 1);
 					set("radius_in_km", 6371);
-					set("relative_object_distance", 1);
-					set("velocity_direction", 90);
 					
 					// Earth moves at 67000 miles/hr
 					// 92955807.3 miles in one AU
-					set("velocity", 67000/ 92955807.3 / 60 / 60);
+					//set("velocity", 67000/ 92955807.3 / 60 / 60);
 					
-				}
+				} else if(preset == "sun") {
+					
+					set("name", "Sun");
+					set("earth_mass", 333000);
+					set("radius_in_km", 6.96342e5);
+					
+				} else if(preset == "moon") {
+					
+					set("name", "Moon");
+					set("earth_mass", 0.0123);
+					set("radius_in_km", 1737.5);
+					
+				} else if(preset == "jupiter") {
+	
+   					set("name", "Jupiter");
+   					set("earth_mass", 317.94);
+   					set("radius_in_km", 69174);
+	
+   				}
 				
 				this._velocityDirectionListener();
 				this._directionListener();
@@ -243,7 +266,7 @@ module.exports = function(obj) {
 },{}],5:[function(require,module,exports){
 // Libraries
 var debounce 	= require("debounce"),
-	uGravity 	= require("ugravity");
+	uGravity 	= require("ugravity"); //require("../../../gravity/uGravity.js");
 
 // interfaces
 var Navigation	= require("./navigation/index"),
@@ -252,7 +275,7 @@ var Navigation	= require("./navigation/index"),
 	TimeDialog 	= require("./timeDialog/index");
 
 // Package information
-var package_json = JSON.parse("{\n  \"name\": \"uGravity.com\",\n  \"description\": \"Map out planetary bodies and create custom simulations with this interactive web app.\",\n  \"version\": \"0.0.1\",\n  \"homepage\": \"https://uGravity.com\",\n  \"author\": \"Steve Farthing <me@stevefar.com> (https://stevefar.com)\",\n  \"license\": \"GPL\",\n  \"dependencies\": {\n    \"jsdom\": \"~0.8.8\",\n    \"location-bar\": \"~1.0.0\",\n    \"brfs\": \"0.0.8\",\n    \"jquery\": \"~1.8.3\",\n    \"step\": \"0.0.5\",\n    \"underscore\": \"~1.5.2\",\n    \"express\": \"~3.4.4\",\n    \"micro-template\": \"~0.1.2\",\n    \"debounce\": \"0.0.3\",\n    \"ugravity\": \"0.0.4\",\n    \"browserify\": \"~2.36.1\"\n  },\n  \"devDependencies\": {\n    \"grunt\": \"~0.4.2\",\n    \"grunt-contrib-less\": \"~0.8.2\",\n    \"grunt-contrib-uglify\": \"~0.2.7\",\n    \"grunt-contrib-watch\": \"~0.5.3\",\n    \"bower\": \"~1.2.7\",\n    \"grunt-contrib-copy\": \"~0.4.1\"\n  }\n}\n".toString());
+var package_json = JSON.parse("{\n  \"name\": \"uGravity.com\",\n  \"description\": \"Map out planetary bodies and create custom simulations with this interactive web app.\",\n  \"version\": \"0.0.1\",\n  \"homepage\": \"https://uGravity.com\",\n  \"author\": \"Steve Farthing <me@stevefar.com> (https://stevefar.com)\",\n  \"license\": \"GPL\",\n  \"dependencies\": {\n    \"jsdom\": \"~0.8.8\",\n    \"location-bar\": \"~1.0.0\",\n    \"brfs\": \"0.0.8\",\n    \"jquery\": \"~1.8.3\",\n    \"step\": \"0.0.5\",\n    \"underscore\": \"~1.5.2\",\n    \"express\": \"~3.4.4\",\n    \"micro-template\": \"~0.1.2\",\n    \"debounce\": \"0.0.3\",\n    \"ugravity\": \"0.0.5\",\n    \"browserify\": \"~2.36.1\"\n  },\n  \"devDependencies\": {\n    \"grunt\": \"~0.4.2\",\n    \"grunt-contrib-less\": \"~0.8.2\",\n    \"grunt-contrib-uglify\": \"~0.2.7\",\n    \"grunt-contrib-watch\": \"~0.5.3\",\n    \"bower\": \"~1.2.7\",\n    \"grunt-contrib-copy\": \"~0.4.1\"\n  }\n}\n".toString());
 
 module.exports = function(window, document, router, onLoad) {
 	
@@ -348,7 +371,7 @@ module.exports = function(window, document, router, onLoad) {
 	this.newObject = function() {
 		editDialog.open(this._settings, null, function(object) {
 			if(!this._settings.objects) this._settings.objects = [];
-			this._settings.objects.push(object);
+			if(object) this._settings.objects.push(object);
 			this.changeSettings(this._settings);
 		}.bind(this));
 	}
@@ -357,13 +380,15 @@ module.exports = function(window, document, router, onLoad) {
 		// Lets find the object
 		var editObject = this._settings.objects.filter(function(o) { return o.id == objectid; })[0];
 
-		// lets remove it from the settings...
-		this._settings.objects = this._settings.objects.filter(function(object) { return editObject != object; });
-		this.changeSettings(this._settings);
-
 		// Lets open the dialog
 		editDialog.open(this._settings, editObject, function(object) {
-			this._settings.objects.push(object);
+			
+			// lets remove it from the settings...
+			this._settings.objects = this._settings.objects.filter(function(object) { return editObject != object; });
+			
+			// add it fresh.
+			if(object) this._settings.objects.push(object);
+
 			this.changeSettings(this._settings);			
 		}.bind(this));
 	}
@@ -447,7 +472,7 @@ module.exports = function(window, document, router, onLoad) {
 	onLoad();
 };
 },{"./editDialog/index":2,"./navigation/index":6,"./saveDialog/index":8,"./timeDialog/index":9,"debounce":12,"ugravity":14}],6:[function(require,module,exports){
-var html = "<!-- <div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\"> -->\n\t<div class=\"container-fluid\">\n\t\t<ul class=\"nav navbar-nav navbar-right\">\n\t\t\t<li class=\"time\"><a><span class=\"glyphicon glyphicon-time\"></span> Time <span class=\"timeScale\">1</span>x</a></li>\n\t\t\t<li class=\"normalize\"><a><span class=\"glyphicon glyphicon-resize-full\"></span> Fit to View</a></li>\n\t\t\t<li class=\"reset\"><a><span class=\"glyphicon glyphicon-refresh\"></span> Reset</a></li>\n\t\t\t<li class=\"start\"><a><span class=\"glyphicon glyphicon-play\"></span> Start</a></li>\n\t\t\t<li class=\"stop\" style=\"display:none\"><a><span class=\"glyphicon glyphicon-pause\"></span> Pause</a></li>\n\t\t</ul>\n\t\t\n\t\t<div class=\"navbar-header\">\n\t\t\t<button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n\t\t\t\t<span class=\"sr-only\">Toggle navigation</span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t</button>\n\t\t\t<a class=\"navbar-brand active\">uGravity</a>\n\t\t</div>\n\t\t<div class=\"collapse navbar-collapse\">\n\t\t\t<ul class=\"nav navbar-nav\">\n\t\t\t\t<li class=\"dropdown\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Project <b class=\"caret\"></b></a>\n\t\t\t\t\t<ul class=\"dropdown-menu project\">\n\t\t\t\t\t\t<li class=\"new\"><a><span class=\"glyphicon glyphicon-flash\"></span> New Project</a></li>\n\t\t\t\t\t\t<li class=\"save\"><a><span class=\"glyphicon glyphicon-floppy-save\"></span> Save Project</a></li>\n\t\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li class=\"dropdown objects\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Objects <b class=\"caret\"></b></a>\n\t\t\t\t\t<!-- <ul class=\"dropdown-menu objects\"></ul> -->\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n<!-- </div> -->".toString(),
+var html = "<!-- <div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\"> -->\n\t<div class=\"container-fluid\">\n\t\t<ul class=\"nav navbar-nav navbar-right\">\n\t\t\t<li class=\"time\"><a><span class=\"glyphicon glyphicon-time\"></span> Set Time Scale (<span class=\"timeScale\">1</span> days/s)</a></li>\n\t\t\t<li class=\"normalize\"><a><span class=\"glyphicon glyphicon-resize-full\"></span> Fit to View</a></li>\n\t\t\t<li class=\"reset\"><a><span class=\"glyphicon glyphicon-refresh\"></span> Reset</a></li>\n\t\t\t<li class=\"start\"><a><span class=\"glyphicon glyphicon-play\"></span> Start</a></li>\n\t\t\t<li class=\"stop\" style=\"display:none\"><a><span class=\"glyphicon glyphicon-pause\"></span> Pause</a></li>\n\t\t</ul>\n\t\t\n\t\t<div class=\"navbar-header\">\n\t\t\t<button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n\t\t\t\t<span class=\"sr-only\">Toggle navigation</span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t</button>\n\t\t\t<a class=\"navbar-brand active\">uGravity</a>\n\t\t</div>\n\t\t<div class=\"collapse navbar-collapse\">\n\t\t\t<ul class=\"nav navbar-nav\">\n\t\t\t\t<li class=\"dropdown\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Project <b class=\"caret\"></b></a>\n\t\t\t\t\t<ul class=\"dropdown-menu project\">\n\t\t\t\t\t\t<li class=\"new\"><a><span class=\"glyphicon glyphicon-flash\"></span> New Project</a></li>\n\t\t\t\t\t\t<li class=\"save\"><a><span class=\"glyphicon glyphicon-floppy-save\"></span> Save Project</a></li>\n\t\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li class=\"dropdown objects\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Objects <b class=\"caret\"></b></a>\n\t\t\t\t\t<!-- <ul class=\"dropdown-menu objects\"></ul> -->\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n<!-- </div> -->".toString(),
 	extend = require("../extend"),
 	ObjectDropdown = require("./objectDropdown/index"),
 	div;
@@ -568,7 +593,8 @@ module.exports = function(window, document) {
 	};
 	
 	this.updateTimeScale = function(timeScale) {
-		div.querySelector("span.timeScale").innerHTML = timeScale;
+		var seconds_in_a_day = 86400;
+		div.querySelector("span.timeScale").innerHTML = Math.round(timeScale / seconds_in_a_day * 100) / 100;
 	};
 	
 	this.remove = function() {
@@ -696,7 +722,7 @@ module.exports = function(window,document, router) {
 	
 }
 },{}],9:[function(require,module,exports){
-var html = "<!-- <div id=\"saveModal\" class=\"modal fade in\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"saveModal\" aria-hidden=\"false\" style=\"display: block;\"> -->\n\t<div class=\"modal-dialog\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n\t\t\t\t<h4 class=\"modal-title\">Time Scale</h4>\n\t\t\t</div>\n\t\t\t<div class=\"modal-body\">\n\t\t\t\t<p><input type=\"number\" name=\"time\" min=\"1\" step=\"1\" style=\"width:80px;\" autofocus> <strong>x</strong></p>\n\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-default btn-primary\" data-dismiss=\"modal\">OK</button>\n\t\t\t</div>\n\t\t</div><!-- /.modal-content -->\n\t</div><!-- /.modal-dialog -->\n<!-- </div> -->".toString();
+var html = "<!-- <div id=\"saveModal\" class=\"modal fade in\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"saveModal\" aria-hidden=\"false\" style=\"display: block;\"> -->\n\t<div class=\"modal-dialog\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n\t\t\t\t<h4 class=\"modal-title\">Time Scale</h4>\n\t\t\t</div>\n\t\t\t<div class=\"modal-body\">\n\t\t\t\t<p><input type=\"number\" name=\"time\" min=\"1\" step=\"1\" style=\"width:80px;\" autofocus> <strong>days / second</strong></p>\n\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-default btn-primary\" data-dismiss=\"modal\">OK</button>\n\t\t\t</div>\n\t\t</div><!-- /.modal-content -->\n\t</div><!-- /.modal-dialog -->\n<!-- </div> -->".toString();
 
 module.exports = function(window,document, router) {
 	
@@ -715,12 +741,16 @@ module.exports = function(window,document, router) {
 	
 	div.innerHTML = html;
 	
+	
+	var seconds_in_a_day = 86400;
+	
 	this.open = function(timeScale, callback) {
 
-		div.querySelector("input").value = timeScale;
+		div.querySelector("input").value = timeScale/seconds_in_a_day;
 
 		this._modalContentListener = function(e) {
-			callback(Number(div.querySelector("input").value));
+			
+			callback(Number(div.querySelector("input").value)*seconds_in_a_day);
 			this.close();
 		}.bind(this);
 		div.querySelector("button").addEventListener("click", this._modalContentListener, false);
@@ -1834,7 +1864,7 @@ define(function() {
 					// calculate the time since the last frame
 		        var thisFrame = new Date().getTime(),
 					
-					// Lets see the time difference
+					// Lets see the time difference (seconds)
 					dt = (thisFrame - lastFrame)/1000 * opts.timeScale;
 				
 				// Lets keep track of the elapsed time.
@@ -1859,24 +1889,28 @@ define(function() {
 				
 						if(otherObject.mass && otherObject.name != object.name) {
 	
-							// Using our favorite F = G (m1*m2)/r^2
-							// r = distance between the centers of the masses
-							// G = 6.67 × 10^-8 gm^-1 cm^3 sec^-2
+							// http://www.arachnoid.com/ruby/gravity/index.html
 							var getDistance 	= function(a,b) { return Math.pow(Math.pow(b[1]-a[1], 2) + Math.pow(b[0]-a[0], 2), 0.5); },
 						
-								G 				= 6.67*Math.pow(10, -32),
+								m_in_au = 1.496e11,
+						
+								G 				= 6.674*Math.pow(10, -11),
 			
 								// distance formula
 								slope 			= (otherObject.y - object.y)/(otherObject.x - object.x),
 								angle 			= Math.atan(slope),
-								distance 		= getDistance([otherObject.x, otherObject.y], [object.x, object.y]), 	// AU
-								force  			= G * (object.mass * otherObject.mass) / Math.pow(distance, 2), 	// kg/s^2
+								distance 		= getDistance([otherObject.x, otherObject.y], [object.x, object.y])*m_in_au, // AU to meters
+								
+								// N*(m^2/kg^2) * (kg * kg) / m = N*m = 1kg*m^2/s^2
+								
+								force  			= G * (object.mass * otherObject.mass) / Math.pow(distance, 2) / m_in_au, 	// F = ma = 1kg(m/s^2)
 	
 								// http://zonalandeducation.com/mstm/physics/mechanics/forces/forceComponents/forceComponents.html
 								xForce = force * Math.cos(angle),
 								yForce = force * Math.sin(angle),
 	
 								//a = f/m1 because F = m*a
+								// lets then convert m/s^2 to AU/s^2
 								xAcceleration = Math.abs(xForce / object.mass),// * (object.x < this.x ? -1 : 1),
 								yAcceleration = Math.abs(yForce / object.mass);// * (object.y < this.y ? -1 : 1);
 		
@@ -1898,9 +1932,9 @@ define(function() {
 						}
 					}
 					
-					// Lets move each object that little bit.
-					opts.objects[i].x += object.velocityX * dt;
-					opts.objects[i].y += object.velocityY * dt;
+					// move objects a little bit
+					opts.objects[i].x += (object.velocityX) * dt;
+					opts.objects[i].y += (object.velocityY) * dt;
 				}		
 				
 			}

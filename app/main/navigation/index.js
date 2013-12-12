@@ -119,7 +119,8 @@ module.exports = function(window, document) {
 	};
 	
 	this.updateTimeScale = function(timeScale) {
-		div.querySelector("span.timeScale").innerHTML = timeScale;
+		var seconds_in_a_day = 86400;
+		div.querySelector("span.timeScale").innerHTML = Math.round(timeScale / seconds_in_a_day * 100) / 100;
 	};
 	
 	this.remove = function() {
