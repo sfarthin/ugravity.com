@@ -7,7 +7,7 @@ module.exports = function(window, document) {
 	
 	extend(this, require("../eventEmitter.js"));
 
-	this.navButtons = ["normalize", "time", "start", "stop", "reset", "save", "new"];
+	this.navButtons = ["normalize", "time", "start", "stop", "reset", "save", "new", "sun-earth-moon", "sun-jupiter"];
 	
 	this.navClick = function(i) {
 
