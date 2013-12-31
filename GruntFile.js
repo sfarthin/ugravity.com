@@ -58,6 +58,7 @@ module.exports = function(grunt) {
 			
 		jsdom.env('<!DOCTYPE html><html lang="en"><head></head><body></body></html>', function (errors, window) {
 			
+			window.jsdom = true;
 			
 			var routes = require("./app/router.js")(window, window.document);
 			
