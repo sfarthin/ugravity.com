@@ -1,6 +1,6 @@
 // Libraries
 var debounce 	= require("debounce"),
-	uGravity 	= require("ugravity"); //require("../../../gravity/uGravity.js");
+	uGravity 	= require("ugravity"); //require("../../../gravity/uGravity.js"); //
 
 // interfaces
 var Navigation	= require("./navigation/index"),
@@ -8,6 +8,8 @@ var Navigation	= require("./navigation/index"),
 	EditDialog 	= require("./editDialog/index"),
 	IntroDialog = require("./introDialog/index"),
 	TimeDialog 	= require("./timeDialog/index");
+
+var processingHTML = require('fs').readFileSync(__dirname + '/processingDialog.html', 'utf-8').toString();
 
 // Package information
 var package_json = JSON.parse(require("fs").readFileSync(__dirname + "/../../package.json").toString());
@@ -86,9 +88,82 @@ module.exports = function(window, document, router, onLoad) {
 		}		
 	};
 	
+	
 	this.reset 		= function() { this.uGravity.load(this._settings); }
 	this.stop 		= function() { this.uGravity.stop(); }
-	this.start 		= function() { this.uGravity.start(); }
+	this.start 		= function() { 
+		if(!this.uGravity.isRunning()) {
+			this.uGravity.start(); 	
+		}
+	}
+	this.capture 	= function() {
+		
+		var confirm_t = confirm("This feature is very experimental and may take up to a minute to produce 5 seconds video. As of 2/1/14, Google Chrome is the only browser that supports this feature. After the capture is complete you can right-click (or CTRL click) and \"Save Video As...\" to save it to your computer in the WebM format. \n\n Are you sure you want to proceed?");
+		// 
+		// time = Number(time);
+		// 
+		// if(time > 10) time = time;
+		
+		if(confirm_t) {
+			
+			// Lets add HTML
+			var pDiv = document.createElement("div");
+			pDiv.innerHTML = processingHTML;
+			pDiv.style.display = "block";
+			pDiv.className = "modal fade In";
+			
+			var background = document.createElement("div");
+			background.className = "modal-backdrop fade in";
+			
+			document.body.appendChild(pDiv);
+			document.body.appendChild(background);
+			
+			// Lets capture video
+			this.encoder = new Whammy.Video(15); 
+		
+			var original_fps = this.uGravity.fps;
+			this.uGravity.fps = 5;
+		
+			// Setup a hook to capture information rather than print to screen.
+			this.uGravity.onRender = function(canvas) {
+				this.encoder.add(canvas); 
+			}.bind(this);
+		
+			// Lets start our simulation
+			this.uGravity.start();
+		
+			// Lets stop it in so many seconds
+			setTimeout(function() {
+			
+				this.uGravity.stop();
+			
+				this.reset();
+			
+				this.uGravity.fps = original_fps;
+		
+				var output 	= this.encoder.compile(),
+					url 	= (window.webkitURL || window.URL).createObjectURL(output); 
+		
+				window.open(url);
+			
+				this.uGravity.onRender = null;
+				
+				// removign processing message.
+				document.body.removeChild(pDiv);
+				document.body.removeChild(background);
+				
+				this.uGravity.render();
+			
+			}.bind(this), 10000);
+		
+		}
+		// 	
+		// } else {
+		// 	alert("Invalid number of seconds given, please enter a number between 1 and 10.");
+		// }
+
+	}.bind(this);
+	
 	this.normalize 	= function() { this.uGravity.normalize(); }
 
 	this.changeSpeed = function() {
@@ -196,6 +271,7 @@ module.exports = function(window, document, router, onLoad) {
 		navigation.on("reset", 		this.reset.bind(this));
 		navigation.on("stop", 		this.stop.bind(this));
 		navigation.on("start", 		this.start.bind(this));
+		navigation.on("capture", 	this.capture.bind(this));
 		navigation.on("normalize", 	this.normalize.bind(this));
 		navigation.on("time", 		this.changeSpeed.bind(this));
 		navigation.on("save", 		this.saveProject.bind(this));

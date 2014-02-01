@@ -7,7 +7,7 @@ module.exports = function(window, document) {
 	
 	extend(this, require("../eventEmitter.js"));
 
-	this.navButtons = ["normalize", "time", "start", "stop", "reset", "save", "new", "sun-earth-moon", "sun-jupiter"];
+	this.navButtons = ["normalize", "time", "start", "stop", "capture", "reset", "save", "new", "sun-earth-moon", "sun-jupiter"];
 	
 	this.navClick = function(i) {
 
@@ -15,9 +15,11 @@ module.exports = function(window, document) {
 		if(i == "stop") {
 			div.querySelector(".nav li.start").style.display = "block";
 			div.querySelector(".nav li.stop").style.display = "none";
+			div.querySelector(".nav li.capture").style.display = "block";
 		} else if(i == "start") {
 			div.querySelector(".nav li.start").style.display = "none";
 			div.querySelector(".nav li.stop").style.display = "block";
+			div.querySelector(".nav li.capture").style.display = "none";
 		}
 
 		// Lets track these things

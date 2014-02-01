@@ -15,8 +15,9 @@
     "express": "~3.4.4",
     "micro-template": "~0.1.2",
     "debounce": "0.0.3",
-    "ugravity": "0.0.5",
-    "browserify": "~2.36.1"
+    "ugravity": "0.0.8",
+    "browserify": "~2.36.1",
+    "hammerjs": "~1.0.6"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

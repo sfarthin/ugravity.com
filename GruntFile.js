@@ -84,9 +84,9 @@ module.exports = function(grunt) {
 				// Grab Javascript and write file
 				fs.writeFile("public/app.js", app_src, this.parallel());
 		
-				// Grab HTML and write file.
+				// Grab HTML and write file. Whammy last becasue its unlikely that anyone will press capture before it loads.
 				window.document.head.innerHTML += "<link rel=\"stylesheet\" href=\"/app.css\">";
-				window.document.body.innerHTML += "<script src='/app.js'></script>";
+				window.document.body.innerHTML += "<script src='/hammer.js'></script><script src='/app.js'></script><script src='/whammy.js'></script>";
 				
 				// Analytics
 				if(fs.existsSync(__dirname + "/analytics.html")) {
@@ -97,7 +97,16 @@ module.exports = function(grunt) {
 				window.close();
 
 				fs.writeFile("public/index.html", html, this.parallel());
-			
+				
+				// Copy hammer.js
+				var newFile = fs.createWriteStream('./public/hammer.js'),     
+					oldFile = fs.createReadStream('./bower_components/hammerjs/hammer.min.js');
+				oldFile.pipe(newFile);
+				
+				// Copy whammy.js
+				var newFile = fs.createWriteStream('./public/whammy.js'),     
+					oldFile = fs.createReadStream('./bower_components/whammy/whammy.js');
+				oldFile.pipe(newFile);
 			
 			}, done);
 		});

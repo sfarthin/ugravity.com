@@ -1,6 +1,7 @@
 <html lang="en"><head><title>uGravity | Universal Gravity Simulator</title><meta name="description" content="Map out planetary bodies and create custom simulations with this interactive web app." /><link rel="stylesheet" href="/app.css" /></head><body><div id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation"><!-- <div class="navbar navbar-inverse navbar-fixed-top" role="navigation"> -->
 	<div class="container-fluid">
 		<ul class="nav navbar-nav navbar-right">
+			<li class="capture"><a><span class="glyphicon glyphicon-facetime-video"></span> Capture Video</a></li>
 			<li class="time"><a><span class="glyphicon glyphicon-time"></span> Set Time Scale (<span class="timeScale">1</span> days/s)</a></li>
 			<li class="normalize"><a><span class="glyphicon glyphicon-resize-full"></span> Fit to View</a></li>
 			<li class="reset"><a><span class="glyphicon glyphicon-refresh"></span> Reset</a></li>
@@ -50,21 +51,29 @@
 				
 				<hr />
 				
-				<p>1. First add objects to the screen. <img src="img/step1.png" width="150" style="float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;" /></p>
-				<p style="clear:both;padding-top:30px;"><img src="img/step2.png" width="150" style="margin-left:20px;float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;" />2. Give objects a mass and a size, position, and distance from another.</p>
-				<p style="clear:both;padding-top:30px;"><img src="img/step3.png" width="150" style="margin-left:20px;float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;" />3. Click Start and watch universal gravity go! You can zoom by scrolling and pan by clicking and dragging. </p>
+				<p> <img src="/img/step1.png" width="250" style="float:right;margin-left:20px;border:1px solid grey;box-shadow: 5px 5px 5px #888;" />1. First add objects to the screen. You can load some objects right away by selecting an example under "Project" (such as <em>Sun and Jupiter</em>).</p>
+				<p style="clear:both;padding-top:30px;"><img src="/img/step2.png" width="250" style="margin-left:20px;float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;" />2. Give objects a mass, size, position, and distance from one another.</p>
+				<p style="clear:both;padding-top:30px;"><img src="/img/step3.png" width="250" style="margin-left:20px;float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;" />3. Click Start and watch universal gravity go! You can zoom by scrolling or pinching (on touch devices) and pan by dragging. </p>
 				
-				<p style="clear:both;padding-top:20px;"></p>
-				<p>Note that there are some a limitations. The accuracy of the simulation will depend on the power of your device, the speed of the simulation, and the number of objects. Please read about the <a target="_blank" href="https://en.wikipedia.org/wiki/N-body_problem">n-body problem</a> for more information.</p>
+				<h4 style="margin-top:30px;clear:both;padding-top:20px;">Support</h4>
+								<hr />
+				
+				This app works best on Google Chrome on a desktop computer. There is support for touch devices (iPhones, iPads, Andriod tablets), but this app requires a significent amount of processing power and the simulation may not run as smooth.
+				
+				<h4 style="margin-top:30px;">Additional Notes</h4>
+								<hr />
+				
+				<p style=""></p>
+				<p>There are some limitations. The accuracy of the simulation will depend on the power of your device, the speed of the simulation, and the number of objects. Please read about the <a target="_blank" href="https://en.wikipedia.org/wiki/N-body_problem">n-body problem</a> for more information.</p>
 				<p>Please <a target="_blank" href="mailto:me@stevefar.com">email me</a> if you have any questions or comments.</p>
-				<p>You may also <a target="_blank" href="https://github.com/sfarthin/ugravity.com">view or download</a> the code. For more information about myself, please visit <a href="http://www.stevefar.com" target="_blank">my website</a></p>
+				<p>You may also <a target="_blank" href="https://github.com/sfarthin/ugravity.com">view or download</a> the code. For more information about myself, please visit <a href="http://www.stevefar.com" target="_blank">my website</a>.</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn save btn-primary" data-dismiss="modal">OK</button>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
-<!-- </div> --></div><canvas id="main-canvas" style="width: 1024px; height: 718px; top: 50px; left: 0px;"></canvas><script src="/app.js"></script><!-- Piwik -->
+<!-- </div> --></div><canvas id="main-canvas" style="width: 1024px; height: 718px; top: 50px; left: 0px;"></canvas><script src="/hammer.js"></script><script src="/app.js"></script><script src="/whammy.js"></script><!-- Piwik -->
 <script type="text/javascript">
   var _paq = _paq || [];
   _paq.push(["trackPageView", "load"]);

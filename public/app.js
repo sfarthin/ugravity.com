@@ -266,7 +266,7 @@ module.exports = function(obj) {
 },{}],5:[function(require,module,exports){
 // Libraries
 var debounce 	= require("debounce"),
-	uGravity 	= require("ugravity"); //require("../../../gravity/uGravity.js");
+	uGravity 	= require("ugravity"); //require("../../../gravity/uGravity.js"); //
 
 // interfaces
 var Navigation	= require("./navigation/index"),
@@ -275,8 +275,10 @@ var Navigation	= require("./navigation/index"),
 	IntroDialog = require("./introDialog/index"),
 	TimeDialog 	= require("./timeDialog/index");
 
+var processingHTML = "<div class=\"modal-dialog\">\n\t<div class=\"modal-content\">\n\t\t<div class=\"modal-body\">\n\t\t\t<p>Processing Video...</p>\n\t\t</div>\n\t</div>\n</div>\n".toString();
+
 // Package information
-var package_json = JSON.parse("{\n  \"name\": \"uGravity.com\",\n  \"description\": \"Map out planetary bodies and create custom simulations with this interactive web app.\",\n  \"version\": \"0.0.1\",\n  \"homepage\": \"https://uGravity.com\",\n  \"author\": \"Steve Farthing <me@stevefar.com> (https://stevefar.com)\",\n  \"license\": \"GPL\",\n  \"dependencies\": {\n    \"jsdom\": \"~0.8.8\",\n    \"location-bar\": \"~1.0.0\",\n    \"brfs\": \"0.0.8\",\n    \"jquery\": \"~1.8.3\",\n    \"step\": \"0.0.5\",\n    \"underscore\": \"~1.5.2\",\n    \"express\": \"~3.4.4\",\n    \"micro-template\": \"~0.1.2\",\n    \"debounce\": \"0.0.3\",\n    \"ugravity\": \"0.0.5\",\n    \"browserify\": \"~2.36.1\"\n  },\n  \"devDependencies\": {\n    \"grunt\": \"~0.4.2\",\n    \"grunt-contrib-less\": \"~0.8.2\",\n    \"grunt-contrib-uglify\": \"~0.2.7\",\n    \"grunt-contrib-watch\": \"~0.5.3\",\n    \"bower\": \"~1.2.7\",\n    \"grunt-contrib-copy\": \"~0.4.1\"\n  }\n}\n".toString());
+var package_json = JSON.parse("{\n  \"name\": \"uGravity.com\",\n  \"description\": \"Map out planetary bodies and create custom simulations with this interactive web app.\",\n  \"version\": \"0.0.1\",\n  \"homepage\": \"https://uGravity.com\",\n  \"author\": \"Steve Farthing <me@stevefar.com> (https://stevefar.com)\",\n  \"license\": \"GPL\",\n  \"dependencies\": {\n    \"jsdom\": \"~0.8.8\",\n    \"location-bar\": \"~1.0.0\",\n    \"brfs\": \"0.0.8\",\n    \"jquery\": \"~1.8.3\",\n    \"step\": \"0.0.5\",\n    \"underscore\": \"~1.5.2\",\n    \"express\": \"~3.4.4\",\n    \"micro-template\": \"~0.1.2\",\n    \"debounce\": \"0.0.3\",\n    \"ugravity\": \"0.0.8\",\n    \"browserify\": \"~2.36.1\",\n    \"hammerjs\": \"~1.0.6\"\n  },\n  \"devDependencies\": {\n    \"grunt\": \"~0.4.2\",\n    \"grunt-contrib-less\": \"~0.8.2\",\n    \"grunt-contrib-uglify\": \"~0.2.7\",\n    \"grunt-contrib-watch\": \"~0.5.3\",\n    \"bower\": \"~1.2.7\",\n    \"grunt-contrib-copy\": \"~0.4.1\"\n  }\n}\n".toString());
 
 module.exports = function(window, document, router, onLoad) {
 	
@@ -352,9 +354,82 @@ module.exports = function(window, document, router, onLoad) {
 		}		
 	};
 	
+	
 	this.reset 		= function() { this.uGravity.load(this._settings); }
 	this.stop 		= function() { this.uGravity.stop(); }
-	this.start 		= function() { this.uGravity.start(); }
+	this.start 		= function() { 
+		if(!this.uGravity.isRunning()) {
+			this.uGravity.start(); 	
+		}
+	}
+	this.capture 	= function() {
+		
+		var confirm_t = confirm("This feature is very experimental and may take up to a minute to produce 5 seconds video. As of 2/1/14, Google Chrome is the only browser that supports this feature. After the capture is complete you can right-click (or CTRL click) and \"Save Video As...\" to save it to your computer in the WebM format. \n\n Are you sure you want to proceed?");
+		// 
+		// time = Number(time);
+		// 
+		// if(time > 10) time = time;
+		
+		if(confirm_t) {
+			
+			// Lets add HTML
+			var pDiv = document.createElement("div");
+			pDiv.innerHTML = processingHTML;
+			pDiv.style.display = "block";
+			pDiv.className = "modal fade In";
+			
+			var background = document.createElement("div");
+			background.className = "modal-backdrop fade in";
+			
+			document.body.appendChild(pDiv);
+			document.body.appendChild(background);
+			
+			// Lets capture video
+			this.encoder = new Whammy.Video(15); 
+		
+			var original_fps = this.uGravity.fps;
+			this.uGravity.fps = 5;
+		
+			// Setup a hook to capture information rather than print to screen.
+			this.uGravity.onRender = function(canvas) {
+				this.encoder.add(canvas); 
+			}.bind(this);
+		
+			// Lets start our simulation
+			this.uGravity.start();
+		
+			// Lets stop it in so many seconds
+			setTimeout(function() {
+			
+				this.uGravity.stop();
+			
+				this.reset();
+			
+				this.uGravity.fps = original_fps;
+		
+				var output 	= this.encoder.compile(),
+					url 	= (window.webkitURL || window.URL).createObjectURL(output); 
+		
+				window.open(url);
+			
+				this.uGravity.onRender = null;
+				
+				// removign processing message.
+				document.body.removeChild(pDiv);
+				document.body.removeChild(background);
+				
+				this.uGravity.render();
+			
+			}.bind(this), 10000);
+		
+		}
+		// 	
+		// } else {
+		// 	alert("Invalid number of seconds given, please enter a number between 1 and 10.");
+		// }
+
+	}.bind(this);
+	
 	this.normalize 	= function() { this.uGravity.normalize(); }
 
 	this.changeSpeed = function() {
@@ -462,6 +537,7 @@ module.exports = function(window, document, router, onLoad) {
 		navigation.on("reset", 		this.reset.bind(this));
 		navigation.on("stop", 		this.stop.bind(this));
 		navigation.on("start", 		this.start.bind(this));
+		navigation.on("capture", 	this.capture.bind(this));
 		navigation.on("normalize", 	this.normalize.bind(this));
 		navigation.on("time", 		this.changeSpeed.bind(this));
 		navigation.on("save", 		this.saveProject.bind(this));
@@ -486,7 +562,7 @@ module.exports = function(window, document, router, onLoad) {
 	onLoad();
 };
 },{"./editDialog/index":2,"./introDialog/index":6,"./navigation/index":7,"./saveDialog/index":9,"./timeDialog/index":10,"debounce":13,"ugravity":15}],6:[function(require,module,exports){
-var html 				= "<!-- <div id=\"introModal\" class=\"modal fade In\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"introModal\" aria-hidden=\"false\"> -->\n\t<div class=\"modal-dialog\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n\t\t\t\t<!-- <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button> -->\n\t\t\t\t<h4 class=\"modal-title\">What is uGravity?</h4>\n\t\t\t</div>\n\t\t\t<div class=\"modal-body\">\n\t\t\t\t<p>Isaac Newton's discovery that <strong>all</strong> objects attract each other with the force of gravitational attraction is amazing. Gravity is universal. The force caused by an apple falling from a tree and the motion of celestial bodies can be found using the same laws. uGravity allows one to map out a 2D system of celestical bodies. When one clicks \"Start,\" the motion of these celestial bodies are simulated using these laws of Universal Gravity.</p>\n\t\t\t\t\n\t\t\t\t<h4 style=\"margin-top:30px;\">Getting Started</h4>\n\t\t\t\t\n\t\t\t\t<hr />\n\t\t\t\t\n\t\t\t\t<p>1. First add objects to the screen. <img src=\"img/step1.png\" width=\"150\" style=\"float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;\"></p>\n\t\t\t\t<p style=\"clear:both;padding-top:30px;\"><img src=\"img/step2.png\" width=\"150\" style=\"margin-left:20px;float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;\">2. Give objects a mass and a size, position, and distance from another.</p>\n\t\t\t\t<p style=\"clear:both;padding-top:30px;\"><img src=\"img/step3.png\" width=\"150\" style=\"margin-left:20px;float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;\">3. Click Start and watch universal gravity go! You can zoom by scrolling and pan by clicking and dragging. </p>\n\t\t\t\t\n\t\t\t\t<p style=\"clear:both;padding-top:20px;\"></p>\n\t\t\t\t<p>Note that there are some a limitations. The accuracy of the simulation will depend on the power of your device, the speed of the simulation, and the number of objects. Please read about the <a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/N-body_problem\">n-body problem</a> for more information.</p>\n\t\t\t\t<p>Please <a target=\"_blank\" href=\"mailto:me@stevefar.com\">email me</a> if you have any questions or comments.</p>\n\t\t\t\t<p>You may also <a target=\"_blank\" href=\"https://github.com/sfarthin/ugravity.com\">view or download</a> the code. For more information about myself, please visit <a href=\"http://www.stevefar.com\" target=\"_blank\">my website</a></p>\n\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n\t\t\t\t<button type=\"button\" class=\"btn save btn-primary\" data-dismiss=\"modal\">OK</button>\n\t\t\t</div>\n\t\t</div><!-- /.modal-content -->\n\t</div><!-- /.modal-dialog -->\n<!-- </div> -->".toString(),
+var html 				= "<!-- <div id=\"introModal\" class=\"modal fade In\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"introModal\" aria-hidden=\"false\"> -->\n\t<div class=\"modal-dialog\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n\t\t\t\t<!-- <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button> -->\n\t\t\t\t<h4 class=\"modal-title\">What is uGravity?</h4>\n\t\t\t</div>\n\t\t\t<div class=\"modal-body\">\n\t\t\t\t<p>Isaac Newton's discovery that <strong>all</strong> objects attract each other with the force of gravitational attraction is amazing. Gravity is universal. The force caused by an apple falling from a tree and the motion of celestial bodies can be found using the same laws. uGravity allows one to map out a 2D system of celestical bodies. When one clicks \"Start,\" the motion of these celestial bodies are simulated using these laws of Universal Gravity.</p>\n\t\t\t\t\n\t\t\t\t<h4 style=\"margin-top:30px;\">Getting Started</h4>\n\t\t\t\t\n\t\t\t\t<hr />\n\t\t\t\t\n\t\t\t\t<p> <img src=\"/img/step1.png\" width=\"250\" style=\"float:right;margin-left:20px;border:1px solid grey;box-shadow: 5px 5px 5px #888;\">1. First add objects to the screen. You can load some objects right away by selecting an example under \"Project\" (such as <em>Sun and Jupiter</em>).</p>\n\t\t\t\t<p style=\"clear:both;padding-top:30px;\"><img src=\"/img/step2.png\" width=\"250\" style=\"margin-left:20px;float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;\">2. Give objects a mass, size, position, and distance from one another.</p>\n\t\t\t\t<p style=\"clear:both;padding-top:30px;\"><img src=\"/img/step3.png\" width=\"250\" style=\"margin-left:20px;float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;\">3. Click Start and watch universal gravity go! You can zoom by scrolling or pinching (on touch devices) and pan by dragging. </p>\n\t\t\t\t\n\t\t\t\t<h4 style=\"margin-top:30px;clear:both;padding-top:20px;\">Support</h4>\n\t\t\t\t\t\t\t\t<hr />\n\t\t\t\t\n\t\t\t\tThis app works best on Google Chrome on a desktop computer. There is support for touch devices (iPhones, iPads, Andriod tablets), but this app requires a significent amount of processing power and the simulation may not run as smooth.\n\t\t\t\t\n\t\t\t\t<h4 style=\"margin-top:30px;\">Additional Notes</h4>\n\t\t\t\t\t\t\t\t<hr />\n\t\t\t\t\n\t\t\t\t<p style=\"\"></p>\n\t\t\t\t<p>There are some limitations. The accuracy of the simulation will depend on the power of your device, the speed of the simulation, and the number of objects. Please read about the <a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/N-body_problem\">n-body problem</a> for more information.</p>\n\t\t\t\t<p>Please <a target=\"_blank\" href=\"mailto:me@stevefar.com\">email me</a> if you have any questions or comments.</p>\n\t\t\t\t<p>You may also <a target=\"_blank\" href=\"https://github.com/sfarthin/ugravity.com\">view or download</a> the code. For more information about myself, please visit <a href=\"http://www.stevefar.com\" target=\"_blank\">my website</a>.</p>\n\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n\t\t\t\t<button type=\"button\" class=\"btn save btn-primary\" data-dismiss=\"modal\">OK</button>\n\t\t\t</div>\n\t\t</div><!-- /.modal-content -->\n\t</div><!-- /.modal-dialog -->\n<!-- </div> -->".toString(),
 	not_supported_html 	= "<!-- <div id=\"introModal\" class=\"modal fade In\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"introModal\" aria-hidden=\"false\"> -->\n\t<div class=\"modal-dialog\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n\t\t\t\t<!-- <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button> -->\n\t\t\t\t<h4 class=\"modal-title\">Unsupported Device or Browser</h4>\n\t\t\t</div>\n\t\t\t<div class=\"modal-body\">\n\t\t\t\t<p><strong>We are sorry but your device/web browser does not support the advanced features of uGravity.</strong></p>\n\t\t\t\t\n\t\t\t\t<p>uGravity works with the latest version of Google Chrome, Mozilla Firefox, Safari, and Internet Explorer. If you are able to update your web browser please do so. uGravity works best with Google Chrome on a desktop computer.</p>\n\t\t\t\t\n\t\t\t\t<p>There is also partial support of iPads running iOS 7.</p>\n\t\t\t</div>\n\t\t</div><!-- /.modal-content -->\n\t</div><!-- /.modal-dialog -->\n<!-- </div> -->".toString();
 
 module.exports = function(window,document, router) {
@@ -554,7 +630,7 @@ module.exports = function(window,document, router) {
 	
 }
 },{}],7:[function(require,module,exports){
-var html = "<!-- <div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\"> -->\n\t<div class=\"container-fluid\">\n\t\t<ul class=\"nav navbar-nav navbar-right\">\n\t\t\t<li class=\"time\"><a><span class=\"glyphicon glyphicon-time\"></span> Set Time Scale (<span class=\"timeScale\">1</span> days/s)</a></li>\n\t\t\t<li class=\"normalize\"><a><span class=\"glyphicon glyphicon-resize-full\"></span> Fit to View</a></li>\n\t\t\t<li class=\"reset\"><a><span class=\"glyphicon glyphicon-refresh\"></span> Reset</a></li>\n\t\t\t<li class=\"start\"><a><span class=\"glyphicon glyphicon-play\"></span> Start</a></li>\n\t\t\t<li class=\"stop\" style=\"display:none\"><a><span class=\"glyphicon glyphicon-pause\"></span> Pause</a></li>\n\t\t</ul>\n\t\t\n\t\t<div class=\"navbar-header\">\n\t\t\t<button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n\t\t\t\t<span class=\"sr-only\">Toggle navigation</span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t</button>\n\t\t\t<a class=\"navbar-brand active\">uGravity</a>\n\t\t</div>\n\t\t<div class=\"collapse navbar-collapse\">\n\t\t\t<ul class=\"nav navbar-nav\">\n\t\t\t\t<li class=\"dropdown\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Project <b class=\"caret\"></b></a>\n\t\t\t\t\t<ul class=\"dropdown-menu project\">\n\t\t\t\t\t\t<li class=\"new\"><a><span class=\"glyphicon glyphicon-flash\"></span> New Project</a></li>\n\t\t\t\t\t\t<li class=\"save\"><a><span class=\"glyphicon glyphicon-floppy-save\"></span> Save Project</a></li>\n\t\t\t\t\t\t<li class=\"divider\"></li>\n\t\t\t\t\t\t<li class=\"sun-jupiter\"><a>Sun and Jupiter Example</a></li>\n\t\t\t\t\t\t<li class=\"sun-earth-moon\"><a>Sun, Earth and Moon Example</a></li>\n\t\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li class=\"dropdown objects\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Objects <b class=\"caret\"></b></a>\n\t\t\t\t\t<!-- <ul class=\"dropdown-menu objects\"></ul> -->\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n<!-- </div> -->".toString(),
+var html = "<!-- <div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\"> -->\n\t<div class=\"container-fluid\">\n\t\t<ul class=\"nav navbar-nav navbar-right\">\n\t\t\t<li class=\"capture\"><a><span class=\"glyphicon glyphicon-facetime-video\"></span> Capture Video</a></li>\n\t\t\t<li class=\"time\"><a><span class=\"glyphicon glyphicon-time\"></span> Set Time Scale (<span class=\"timeScale\">1</span> days/s)</a></li>\n\t\t\t<li class=\"normalize\"><a><span class=\"glyphicon glyphicon-resize-full\"></span> Fit to View</a></li>\n\t\t\t<li class=\"reset\"><a><span class=\"glyphicon glyphicon-refresh\"></span> Reset</a></li>\n\t\t\t<li class=\"start\"><a><span class=\"glyphicon glyphicon-play\"></span> Start</a></li>\n\t\t\t<li class=\"stop\" style=\"display:none\"><a><span class=\"glyphicon glyphicon-pause\"></span> Pause</a></li>\n\t\t</ul>\n\t\t\n\t\t<div class=\"navbar-header\">\n\t\t\t<button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n\t\t\t\t<span class=\"sr-only\">Toggle navigation</span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t\t<span class=\"icon-bar\"></span>\n\t\t\t</button>\n\t\t\t<a class=\"navbar-brand active\">uGravity</a>\n\t\t</div>\n\t\t<div class=\"collapse navbar-collapse\">\n\t\t\t<ul class=\"nav navbar-nav\">\n\t\t\t\t<li class=\"dropdown\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Project <b class=\"caret\"></b></a>\n\t\t\t\t\t<ul class=\"dropdown-menu project\">\n\t\t\t\t\t\t<li class=\"new\"><a><span class=\"glyphicon glyphicon-flash\"></span> New Project</a></li>\n\t\t\t\t\t\t<li class=\"save\"><a><span class=\"glyphicon glyphicon-floppy-save\"></span> Save Project</a></li>\n\t\t\t\t\t\t<li class=\"divider\"></li>\n\t\t\t\t\t\t<li class=\"sun-jupiter\"><a>Sun and Jupiter Example</a></li>\n\t\t\t\t\t\t<li class=\"sun-earth-moon\"><a>Sun, Earth and Moon Example</a></li>\n\t\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li class=\"dropdown objects\">\n\t\t\t\t\t<a class=\"dropdown-toggle\" data-toggle=\"dropdown\">Objects <b class=\"caret\"></b></a>\n\t\t\t\t\t<!-- <ul class=\"dropdown-menu objects\"></ul> -->\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n<!-- </div> -->".toString(),
 	extend = require("../extend"),
 	ObjectDropdown = require("./objectDropdown/index"),
 	div;
@@ -563,7 +639,7 @@ module.exports = function(window, document) {
 	
 	extend(this, require("../eventEmitter.js"));
 
-	this.navButtons = ["normalize", "time", "start", "stop", "reset", "save", "new", "sun-earth-moon", "sun-jupiter"];
+	this.navButtons = ["normalize", "time", "start", "stop", "capture", "reset", "save", "new", "sun-earth-moon", "sun-jupiter"];
 	
 	this.navClick = function(i) {
 
@@ -571,9 +647,11 @@ module.exports = function(window, document) {
 		if(i == "stop") {
 			div.querySelector(".nav li.start").style.display = "block";
 			div.querySelector(".nav li.stop").style.display = "none";
+			div.querySelector(".nav li.capture").style.display = "block";
 		} else if(i == "start") {
 			div.querySelector(".nav li.start").style.display = "none";
 			div.querySelector(".nav li.stop").style.display = "block";
+			div.querySelector(".nav li.capture").style.display = "none";
 		}
 
 		// Lets track these things
@@ -1275,12 +1353,15 @@ define(function() {
 });
 })(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); });
 },{}],15:[function(require,module,exports){
+
+
 !function (name, definition) {
 	// based on https://github.com/ded/domready for best support
 	if (typeof module != 'undefined') module.exports = definition()
 	else if (typeof define == 'function' && typeof define.amd == 'object') define(definition)
 	else this[name] = definition()
 }('uGravity', function(uGravity) {
+	
 	// Variable to catch data from jsonp datafiles until the onload method triggers. We then
 	// assign these options to the appropriate canvas.
 	var jsonp_opts;
@@ -1316,7 +1397,7 @@ define(function() {
 			return new uGravity(canvas, opts);
 	    }
 		
-			// A reference to our visible canvas
+		// A reference to our visible canvas
 		var mousedown = false,
 			last_position_x,
 			last_position_y;
@@ -1371,9 +1452,9 @@ define(function() {
 			* Allow user to Pan by click and dragging.
 			*
 			**/
-			canvas.addEventListener ("mousedown", function (event) { mousedown = true; });		
-			canvas.addEventListener ("mouseup", function (event) { mousedown = false; last_position_x = null; last_position_y = null; });
-			canvas.addEventListener ("mousemove", function (event) {
+			canvas.addEventListener ("mousedown", 	function (event) { mousedown = true; });		
+			canvas.addEventListener ("mouseup", 	function (event) { mousedown = false; last_position_x = null; last_position_y = null; });
+			canvas.addEventListener ("mousemove", 	function (event) {
 				if(mousedown) {
 		            var x = event.clientX;
 		            var y = event.clientY;
@@ -1392,6 +1473,70 @@ define(function() {
 				}
 			
 	        }.bind(this));
+			
+			/**
+			*
+			* Pinching and dragging (requires hammer js)
+			*
+			**/
+			if(typeof Hammer != undefined) {
+		        var hammertime = new Hammer(canvas, { drag_lock_to_axis: true });
+				
+				var original_x = null,
+					original_y = null,
+					original_scale = null;
+				
+		        hammertime.on("release drag pinch", function(ev) {
+	        	
+		            switch(ev.type) {
+		                case 'drag':
+							
+							if(typeof original_x == "number") {
+								this.offsetX = original_x + (ev.gesture.deltaX/this.scale)*2;
+								this.offsetY = original_y + (ev.gesture.deltaY/this.scale)*2;
+							} else {
+								original_x = this.offsetX;
+								original_y = this.offsetY;	
+							}
+							
+							if(!runningWorker) this.render();
+						
+							break;
+							
+						case 'pinch':
+							
+							if(ev.gesture.scale) {
+							
+								if(typeof original_scale == "number") {
+									this.scale = original_scale * ev.gesture.scale;
+								} else {
+									original_scale = this.scale;
+								}
+							
+								if(!runningWorker) this.render();
+							}
+							
+							break;
+							
+						case 'release':
+							
+							original_x = null;
+							original_y = null;
+							original_scale = null;
+							
+							break;
+							
+					}
+				
+		        }.bind(this));
+				
+				// Prevents overscroll animation
+				// http://stackoverflow.com/questions/14307324/stop-overscroll-when-using-webkit-overflow-scrolling-touch
+				canvas.addEventListener('touchmove',
+				function(e) {
+					e.preventDefault();
+				}, false );
+			}
 			
 		
 			// If the options has the simulation start automatically, so be it.
@@ -1521,6 +1666,10 @@ define(function() {
 			runningWorker.postMessage(this.export());
 		}
 		
+		this.isRunning = function() {
+			return !!runningWorker;
+		}
+		
 		/**
 		*
 		* Handles messages from our worker
@@ -1536,7 +1685,11 @@ define(function() {
 					// Lets take in all the new State the Physics Worker gave us, and render the page.
 					this.objects = data.objects;
 					this.elapsedTime = data.elapsedTime;
-					this.render(); 
+					
+					// requestAnimationFrame is called in the 
+					//if(typeof requestAnimationFrame != undefined) 
+					this.render();
+						
 					return;
 				
 				// @todo allow messages to be printed to the screen.
@@ -1556,7 +1709,14 @@ define(function() {
     
 	        // Clear our drawing contexts
 	        ctx.clearRect(0, 0, backBuffer.width, backBuffer.height);
-	        live_ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			// Lets make a white background for the video.
+	        ctx.rect(0, 0, backBuffer.width, backBuffer.height);
+			ctx.fillStyle = 'white';
+			ctx.fill();
+			
+			if(!this.onRender)
+				live_ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 			/**
 			*
@@ -1608,7 +1768,16 @@ define(function() {
 			**/
     
 	        // copy the back buffer to the displayed canvas
-	        live_ctx.drawImage(backBuffer, 0, 0);
+	        
+			
+			if(this.onRender)
+				this.onRender(backBuffer);
+			else
+				live_ctx.drawImage(backBuffer, 0, 0);
+			
+			// if(this.worker && requestAnimationFrame)
+			// 	requestAnimationFrame(this.render);
+				
 	    };
 		
 		this.drawTitle = function() {
