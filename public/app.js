@@ -275,7 +275,7 @@ var Navigation	= require("./navigation/index"),
 	IntroDialog = require("./introDialog/index"),
 	TimeDialog 	= require("./timeDialog/index");
 
-var processingHTML = "<div class=\"modal-dialog\">\n\t<div class=\"modal-content\">\n\t\t<div class=\"modal-body\">\n\t\t\t<p>Processing Video...</p>\n\t\t</div>\n\t</div>\n</div>\n".toString();
+var processingHTML = "<div class=\"modal-dialog\">\n\t<div class=\"modal-content\">\n\t\t<div class=\"modal-body\">\n\t\t\t<p>Processing Video...</p>\n\t\t</div>\n\t\t<div class=\"modal-footer\">\n\t\t\t<!-- <button type=\"button\" class=\"btn save btn-primary\" data-dismiss=\"modal\">OK</button> -->\n\t\t</div>\n\t</div>\n</div>\n".toString();
 
 // Package information
 var package_json = JSON.parse("{\n  \"name\": \"uGravity.com\",\n  \"description\": \"Map out planetary bodies and create custom simulations with this interactive web app.\",\n  \"version\": \"0.0.1\",\n  \"homepage\": \"https://uGravity.com\",\n  \"author\": \"Steve Farthing <me@stevefar.com> (https://stevefar.com)\",\n  \"license\": \"GPL\",\n  \"dependencies\": {\n    \"jsdom\": \"~0.8.8\",\n    \"location-bar\": \"~1.0.0\",\n    \"brfs\": \"0.0.8\",\n    \"jquery\": \"~1.8.3\",\n    \"step\": \"0.0.5\",\n    \"underscore\": \"~1.5.2\",\n    \"express\": \"~3.4.4\",\n    \"micro-template\": \"~0.1.2\",\n    \"debounce\": \"0.0.3\",\n    \"ugravity\": \"0.0.8\",\n    \"browserify\": \"~2.36.1\",\n    \"hammerjs\": \"~1.0.6\"\n  },\n  \"devDependencies\": {\n    \"grunt\": \"~0.4.2\",\n    \"grunt-contrib-less\": \"~0.8.2\",\n    \"grunt-contrib-uglify\": \"~0.2.7\",\n    \"grunt-contrib-watch\": \"~0.5.3\",\n    \"bower\": \"~1.2.7\",\n    \"grunt-contrib-copy\": \"~0.4.1\"\n  }\n}\n".toString());
@@ -410,13 +410,33 @@ module.exports = function(window, document, router, onLoad) {
 				var output 	= this.encoder.compile(),
 					url 	= (window.webkitURL || window.URL).createObjectURL(output); 
 		
-				window.open(url);
+				var video = document.createElement("video"),
+					body = pDiv.querySelector(".modal-body");
+
+				video.src = url;
+				video.style.width="100%";
+				video.setAttribute("controls", "controls");
+				video.setAttribute("autoplay", "autoplay");
+				body.innerHTML = '';
+				body.appendChild(video);
+				
+				var link = document.createElement("a");
+				link.innerHTML = "Download Video";
+				link.addEventListener("click", function() {
+					window.open(url);
+				});
+				body.appendChild(link);
+				
+				pDiv.querySelector(".modal-footer").innerHTML = '<button type="button" class="btn save btn-primary" data-dismiss="modal">OK</button>';
+			
+				pDiv.querySelector(".modal-footer button").addEventListener("click", function() {
+					document.body.removeChild(pDiv);
+					document.body.removeChild(background);
+				});
 			
 				this.uGravity.onRender = null;
 				
 				// removign processing message.
-				document.body.removeChild(pDiv);
-				document.body.removeChild(background);
 				
 				this.uGravity.render();
 			

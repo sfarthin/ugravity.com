@@ -144,13 +144,33 @@ module.exports = function(window, document, router, onLoad) {
 				var output 	= this.encoder.compile(),
 					url 	= (window.webkitURL || window.URL).createObjectURL(output); 
 		
-				window.open(url);
+				var video = document.createElement("video"),
+					body = pDiv.querySelector(".modal-body");
+
+				video.src = url;
+				video.style.width="100%";
+				video.setAttribute("controls", "controls");
+				video.setAttribute("autoplay", "autoplay");
+				body.innerHTML = '';
+				body.appendChild(video);
+				
+				var link = document.createElement("a");
+				link.innerHTML = "Download Video";
+				link.addEventListener("click", function() {
+					window.open(url);
+				});
+				body.appendChild(link);
+				
+				pDiv.querySelector(".modal-footer").innerHTML = '<button type="button" class="btn save btn-primary" data-dismiss="modal">OK</button>';
+			
+				pDiv.querySelector(".modal-footer button").addEventListener("click", function() {
+					document.body.removeChild(pDiv);
+					document.body.removeChild(background);
+				});
 			
 				this.uGravity.onRender = null;
 				
 				// removign processing message.
-				document.body.removeChild(pDiv);
-				document.body.removeChild(background);
 				
 				this.uGravity.render();
 			
