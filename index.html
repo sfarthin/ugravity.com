@@ -1,0 +1,90 @@
+<html lang="en"><head><title>uGravity | Universal Gravity Simulator</title><meta name="description" content="Map out planetary bodies and create custom simulations with this interactive web app." /><link rel="stylesheet" href="/app.css" /></head><body><div id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation"><!-- <div class="navbar navbar-inverse navbar-fixed-top" role="navigation"> -->
+	<div class="container-fluid">
+		<ul class="nav navbar-nav navbar-right">
+			<li class="capture"><a><span class="glyphicon glyphicon-facetime-video"></span> Capture Video</a></li>
+			<li class="time"><a><span class="glyphicon glyphicon-time"></span> Set Time Scale (<span class="timeScale">1</span> days/s)</a></li>
+			<li class="normalize"><a><span class="glyphicon glyphicon-resize-full"></span> Fit to View</a></li>
+			<li class="reset"><a><span class="glyphicon glyphicon-refresh"></span> Reset</a></li>
+			<li class="start"><a><span class="glyphicon glyphicon-play"></span> Start</a></li>
+			<li class="stop" style="display:none"><a><span class="glyphicon glyphicon-pause"></span> Pause</a></li>
+		</ul>
+		
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand active">uGravity</a>
+		</div>
+		<div class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown">Project <b class="caret"></b></a>
+					<ul class="dropdown-menu project">
+						<li class="new"><a><span class="glyphicon glyphicon-flash"></span> New Project</a></li>
+						<li class="save"><a><span class="glyphicon glyphicon-floppy-save"></span> Save Project</a></li>
+						<li class="divider"></li>
+						<li class="sun-jupiter"><a>Sun and Jupiter Example</a></li>
+						<li class="sun-earth-moon"><a>Sun, Earth and Moon Example</a></li>
+					</ul>
+				</li>
+				<li class="dropdown objects">
+					<a class="dropdown-toggle" data-toggle="dropdown">Objects <b class="caret"></b></a>
+					<!-- <ul class="dropdown-menu objects"></ul> -->
+				<ul class="dropdown-menu objects"></ul></li>
+			</ul>
+		</div>
+	</div>
+<!-- </div> --></div><div class="modal-backdrop fade in"></div><div id="introModal" class="modal fade In" tabindex="-1" role="dialog" aria-labelledby="introModal" aria-hidden="false" style="display: block;"><!-- <div id="introModal" class="modal fade In" tabindex="-1" role="dialog" aria-labelledby="introModal" aria-hidden="false"> -->
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+				<h4 class="modal-title">What is uGravity?</h4>
+			</div>
+			<div class="modal-body">
+				<p>Isaac Newton's discovery that <strong>all</strong> objects attract each other with the force of gravitational attraction is amazing. Gravity is universal. The force caused by an apple falling from a tree and the motion of celestial bodies can be found using the same laws. uGravity allows one to map out a 2D system of celestical bodies. When one clicks "Start," the motion of these celestial bodies are simulated using these laws of Universal Gravity.</p>
+				
+				<h4 style="margin-top:30px;">Getting Started</h4>
+				
+				<hr />
+				
+				<p> <img src="/img/step1.png" width="250" style="float:right;margin-left:20px;border:1px solid grey;box-shadow: 5px 5px 5px #888;" />1. First add objects to the screen. You can load some objects right away by selecting an example under "Project" (such as <em>Sun and Jupiter</em>).</p>
+				<p style="clear:both;padding-top:30px;"><img src="/img/step2.png" width="250" style="margin-left:20px;float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;" />2. Give objects a mass, size, position, and distance from one another.</p>
+				<p style="clear:both;padding-top:30px;"><img src="/img/step3.png" width="250" style="margin-left:20px;float:right;border:1px solid grey;box-shadow: 5px 5px 5px #888;" />3. Click Start and watch universal gravity go! You can zoom by scrolling or pinching (on touch devices) and pan by dragging. </p>
+				
+				<h4 style="margin-top:30px;clear:both;padding-top:20px;">Support</h4>
+								<hr />
+				
+				This app works best on Google Chrome on a desktop computer. There is support for touch devices (iPhones, iPads, Andriod tablets), but this app requires a significent amount of processing power and the simulation may not run as smooth.
+				
+				<h4 style="margin-top:30px;">Additional Notes</h4>
+								<hr />
+				
+				<p style=""></p>
+				<p>There are some limitations. The accuracy of the simulation will depend on the power of your device, the speed of the simulation, and the number of objects. Please read about the <a target="_blank" href="https://en.wikipedia.org/wiki/N-body_problem">n-body problem</a> for more information.</p>
+				<p>Please <a target="_blank" href="mailto:me@stevefar.com">email me</a> if you have any questions or comments.</p>
+				<p>You may also <a target="_blank" href="https://github.com/sfarthin/ugravity.com">view or download</a> the code. For more information about myself, please visit <a href="http://www.stevefar.com" target="_blank">my website</a>.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn save btn-primary" data-dismiss="modal">OK</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+<!-- </div> --></div><canvas id="main-canvas" style="width: 1024px; height: 718px; top: 50px; left: 0px;"></canvas><script src="/hammer.js"></script><script src="/app.js"></script><script src="/whammy.js"></script><!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(["trackPageView", "load"]);
+  _paq.push(["enableLinkTracking"]);
+
+  (function() {
+    var u="https://stevefar.com/analytics/";
+    _paq.push(["setTrackerUrl", u+"piwik.php"]);
+    _paq.push(["setSiteId", "2"]);
+    var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+    g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Piwik Code --></body></html>
