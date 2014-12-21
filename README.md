@@ -1,6 +1,6 @@
 uGravity.com
 ====
-Map out planetary bodies and create custom simulations with this interactive web app. See [uGravity.com](https://ugravity.com).
+Map out planetary bodies and create custom simulations with this interactive web app. See [uGravity.com](http://ugravity.com).
 
 Setup
 ---
